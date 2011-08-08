@@ -128,7 +128,11 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
             {
                 // TODO: Make this a bit better.
                 
-                return 1; // success
+                $this->update( array( 
+                    'active' => date( 'Y-m-d H:i:s' )
+                ), $this->getAdapter( )->quoteInto( 'id = ?', $row->id ) );
+                
+                return $this->cleanup ( ); // success so do a cleanup roll;
             }
             return -1; // error - incorrect password
         }
@@ -163,7 +167,35 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
             'sesh_time' => null
         ), $this->getAdapter( )->quoteInto( 'id = ?', $id ) );
         
+        $this->getAdapter( )->delete( 'room_players',
+            $this->getAdapter( )->quoteInto( 'player_id = ?', $id ) );
+        
+        $this->getAdapter( )->delete( 'events',
+            $this->getAdapter( )->quoteInto( 'player_id = ?', $id ) );
         // TODO: validate.
         return true;
+    }
+    
+    public function cleanup ( )
+    {
+        // TODO: Better way of doing this
+        if ( rand ( 1, 20 ) == 10 )
+        {
+            $q = $this->select(
+                CnCNet_Db_Table_Abstract::SELECT_WITH_FROM_PART, 
+                array( 'id', 'active' )
+            )->where( 'active < ?', date ( 'Y-m-d H:i:s', time()-30 ) );
+                
+            $uids = array ( );
+            $users = $this->fetchAll( $q );
+            foreach ( $users as $r )
+            {
+                $this->logout( $r['id'] );
+                $uids[] = $r['id'];
+            }
+            return $uids;
+        }
+        
+        return 1;
     }
 }

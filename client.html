@@ -1,0 +1,789 @@
+<!doctype html>
+<html xmlns="http://www.w3c.org/1999/xhtml" lang="en-gb" xml:lang="en-gb">
+    <head>
+        <meta charset="utf-8" />
+        
+        <title>CnCNet</title>
+        
+        <link type="text/css" rel="stylesheet" href="css/reset.css" />
+        <link type="text/css" rel="stylesheet" href="css/text.css" />
+        <link type="text/css" rel="stylesheet" href="css/960.css" />
+        <link type="text/css" rel="stylesheet" href="css/qvivo_scroll.css" />
+        <style type="text/css">
+            body {
+                background: #999;
+                overflow:hidden;
+            }
+            
+            body, button {
+                font-family: 'TradeGothic LT CondEighteen', sans-serif;
+            }
+
+            ::-moz-selection, input::-moz-selection {
+                background: #f30;
+                color: #000;
+            } 
+
+            ::selection, input::selection {
+                background: #f30;
+                color: #000;
+            }
+            
+            .posbottom {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+            }
+            
+            .hide {
+                display: none;
+            }
+            
+            #cncnet_login {
+                position: absolute;
+                left: 0;
+                top: 50%;
+                margin-top: -9em;
+                height: 18em;
+                width: 100%;
+                border-top: 12px #333 solid;
+                border-bottom: 12px #333 solid;
+                background: #000;
+                z-index: 1000;
+                color: #999;
+                
+                -moz-box-shadow: 0px 0px 40px #000; 
+                -webkit-box-shadow: 0px 0px 40px #000; 
+                box-shadow: 0px 0px 40px #000; 
+            }
+            
+                #cncnet_login h1 {
+                    font-size: 3.5em;
+                    font-weight: normal;
+                    text-align: center;
+                    margin-bottom: .25em
+                }
+                
+                #cncnet_login label {
+                    font-size: 2em;
+                }
+                
+                #cncnet_login label input {
+                    float: right;
+                    width: 350px;
+                    margin-bottom: .5em;
+                    border: 2px #333 solid;
+                    font-size: 1em;
+                    color: #fff;
+                    padding: 2px;
+                    
+                    -moz-border-radius: 6px; 
+                    -webkit-border-radius: 6px; 
+                    border-radius: 6px; 
+
+                    -moz-background-clip: padding; 
+                    -webkit-background-clip: padding-box; 
+                    background-clip: padding-box; 
+                    
+                    background-color: #333;
+                    background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(#666)); 
+                    background-image: -webkit-linear-gradient(top, #333, #666); 
+                    background-image: -moz-linear-gradient(top, #333, #666); 
+                    background-image: -ms-linear-gradient(top, #333, #666); 
+                    background-image: -o-linear-gradient(top, #333, #666); 
+                    background-image: linear-gradient(top, #333, #666);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#666666'); 
+                }
+                
+                #cncnet_login label input:focus {
+                    border: 2px #c30 solid;
+                }
+                
+                *:focus {
+                    outline: none;
+                }
+                
+                .login_button button {
+                    text-align: center;
+                    font-size: 2em;
+                    width: 100%; 
+                    display: block;
+                    color: #000;
+                    border: none;
+                    margin: 0;
+                    cursor: pointer;
+                    
+                    text-shadow: 0 0 12px #000;
+                    text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+                    
+                    -moz-border-radius: 6px 6px 0 0; 
+                    -webkit-border-radius: 6px 6px 0 0; 
+                    border-radius: 6px 6px 0 0; 
+
+                    -moz-background-clip: padding; 
+                    -webkit-background-clip: padding-box; 
+                    background-clip: padding-box; 
+                    
+                    background-color: #999;
+                    background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#333)); 
+                    background-image: -webkit-linear-gradient(top, #999, #333); 
+                    background-image: -moz-linear-gradient(top, #999, #333); 
+                    background-image: -ms-linear-gradient(top, #999, #333); 
+                    background-image: -o-linear-gradient(top, #999, #333); 
+                    background-image: linear-gradient(top, 9999, #333);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
+                }
+                
+                .login_button button:hover, .login_button button:focus {
+                    color: #f30;
+                    text-shadow: 0 0 12px #f30;
+                }
+                
+            #cncnet_main header {
+                height: 10%;
+            }
+            
+            #cncnet_main > div {
+                height: 80%;
+            }
+            
+            #cncnet_chat, #cncnet_rooms, #cncnet_users {
+                position: relative;
+                width: 100%;
+                padding-bottom: 4em;
+                border: 2px #333 solid;
+                font-size: 1em;
+                color: #fff;
+                
+                -moz-border-radius: 10px; 
+                -webkit-border-radius: 10px; 
+                border-radius: 10px; 
+
+                -moz-background-clip: padding; 
+                -webkit-background-clip: padding-box; 
+                background-clip: padding-box; 
+                
+                background-color: #333;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(#000)); 
+                background-image: -webkit-linear-gradient(top, #333, #000); 
+                background-image: -moz-linear-gradient(top, #333, #000); 
+                background-image: -ms-linear-gradient(top, #333, #000); 
+                background-image: -o-linear-gradient(top, #333, #000); 
+                background-image: linear-gradient(top, #333, #000);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#000000'); 
+            }
+            
+            #cncnet_chat {
+                height: 100%;
+            }
+            
+            #cncnet_rooms {
+                margin-top: 1%;
+                height: 49%;
+            }
+            
+            #cncnet_users {
+                height: 50%;
+                padding: 0;
+            }
+            
+            .cncnet_shutter {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                height: 3.5em;
+                font-size: 1em;
+                color: #000;
+                
+                -moz-border-radius: 8px; 
+                -webkit-border-radius: 8px; 
+                border-radius: 8px; 
+
+                -moz-background-clip: padding; 
+                -webkit-background-clip: padding-box; 
+                background-clip: padding-box; 
+                
+                background-color: #e16119;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#e16119), to(#a41506)); 
+                background-image: -webkit-linear-gradient(top, #e16119, #a41506); 
+                background-image: -moz-linear-gradient(top, #e16119, #a41506); 
+                background-image: -ms-linear-gradient(top, #e16119, #a41506); 
+                background-image: -o-linear-gradient(top, #e16119, #a41506); 
+                background-image: linear-gradient(top, #e16119, #a41506);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e16119', EndColorStr='#a41506'); 
+            }
+            
+            #cncnet_chat_list, #cncnet_room_list, #cncnet_user_list {
+                font-family: consolas, mono;
+                list-style: none;
+                overflow-x: hidden;
+                overflow-y: auto;
+                height: 100%;
+                font-size: 1.2em
+            }
+            
+            #cncnet_chat_list li, #cncnet_room_list li, #cncnet_user_list li {
+                margin-left: 5px;
+            }
+            
+            #cncnet_chat_box {
+                float: left;
+                width: 84%;
+                height: 1.5em;
+                font-size: 2em;
+                color: #000;
+                padding: 0;
+                margin: 0.125em 0 0 0.125em;
+                border: none;
+                
+                -moz-border-radius: 8px 0 0 8px; 
+                -webkit-border-radius: 8px 0 0 8px; 
+                border-radius: 8px 0 0 8px; 
+
+                -moz-background-clip: padding; 
+                -webkit-background-clip: padding-box; 
+                background-clip: padding-box; 
+                
+                background-color: #fff;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); 
+                background-image: -webkit-linear-gradient(top, #ccc, #fff); 
+                background-image: -moz-linear-gradient(top, #ccc, #fff); 
+                background-image: -ms-linear-gradient(top, #ccc, #fff); 
+                background-image: -o-linear-gradient(top, #ccc, #fff); 
+                background-image: linear-gradient(top, #ccc, #fff);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#fff'); 
+            }
+            
+            #cncnet_chat_send {
+                float: right;
+                width: 14%;
+                height: 1.5em;
+                font-size: 2em;
+                color: #000;
+                text-align: center;
+                display: block;
+                border: none;
+                margin: 0.125em 0.125em 0 0;
+                cursor: pointer;
+                
+                text-shadow: 0 0 12px #000;
+                text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+                
+                -moz-border-radius: 0 8px 8px 0; 
+                -webkit-border-radius: 0 8px 8px 0; 
+                border-radius: 0 8px 8px 0; 
+
+                -moz-background-clip: padding; 
+                -webkit-background-clip: padding-box; 
+                background-clip: padding-box; 
+                    
+                background-color: #999;
+                background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#333)); 
+                background-image: -webkit-linear-gradient(top, #999, #333); 
+                background-image: -moz-linear-gradient(top, #999, #333); 
+                background-image: -ms-linear-gradient(top, #999, #333); 
+                background-image: -o-linear-gradient(top, #999, #333); 
+                background-image: linear-gradient(top, 9999, #333);
+                filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
+            }
+            
+            .chat_time {
+                font-size: 0.8em;
+                color: #ccc;
+            }
+            
+            .system_message {
+                color: #f60;
+                font-weight: bold;
+            }
+            
+            .locked_room {
+                background: url("img/lock.png") no-repeat 100% 50%;
+            }
+        </style>
+        
+        <script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
+        <script type="text/javascript" src="js/json2.js"></script>
+        <script type="text/javascript" src="js/jquery.ba-dotimeout.min.js"></script>
+        <script type="text/javascript" src="js/jquery.zend.jsonrpc.js"></script>
+        <script type="text/javascript">
+            var derp = {};
+        
+            ( function( $ )
+            {
+                $.fn.extend(
+                {
+                    cncNet: function( options ) 
+                    {
+             
+                        //Settings list and the default values
+                        var defaults = 
+                        {
+                            serverUrl: 'cncnet',
+                            heartbeat: 1000
+                        };
+                        
+                        var options = $.extend ( defaults, options );
+                        
+                        return this.each( function ( ) 
+                        {
+                            var o = options;
+                            var obj = $( this );
+                            var cncnet = jQuery.Zend.jsonrpc( { url: o.serverUrl, async: true } );
+                            var s_key = false;
+                            var hb_since = 0;
+                            var current_room = 0;
+                            var last_event = 0;
+                            
+                            // <login>
+                            var reg_mode = false;
+                            
+                            obj.append( '<div id="cncnet_login"><div class="container_12">' +
+                                '<h1 class="grid_6 prefix_3 suffix_3">Login to CnCNet</h1>' +
+                                '<div id="cncnet_login_fields">' +
+                                '<label class="grid_6 prefix_3 suffix_3"><span>Username:</span>' +
+                                '<input id="cncnet_login_un" type="text" tabstop="1" /></label>' +
+                                '<label class="grid_6 prefix_3 suffix_3"><span>Password:</span>' +
+                                '<input id="cncnet_login_pw" type="password" tabstop="2" /></label>' +
+                                '<label class="grid_6 prefix_3 suffix_3 hide"><span>Email:</span>' +
+                                '<input id="cncnet_login_em" type="email" tabstop="2" /></label></div>' +
+                                '<div class="posbottom"><div class="login_button grid_2 prefix_4">' +
+                                '<button id="cncnet_login_do" tabstop="3" type="button">Login</button></div>' +
+                                '<div class="login_button grid_2 suffix_4">' + 
+                                '<button id="cncnet_login_reg" tabstop="4" type="button">Register</button></div>' +
+                                '</div></div></div>'
+                            );
+                            
+                            $( '#cncnet_login_un' ).focus ( );
+                            
+                            var login_complete = function ( )
+                            {
+                                if ( s_key != false )
+                                {
+                                    $('#cncnet_login').animate ( 
+                                    {
+                                        'opacity': '0'
+                                    }, function ( )
+                                    {
+                                        $( this ).hide( );
+                                    } );
+                                    $( '#cncnet_main' ).fadeIn ( );
+                                    
+                                    rooms = cncnet.lst (
+                                    {
+                                        success: function ( ret, id, method ) 
+                                        {
+                                            $( ret ).each ( function ( i, val )
+                                            {
+                                                add_room_to_list ( val );
+                                            } );
+                                            
+                                            display_player_list ( 0 );
+                                        },
+                                        error: function ( )
+                                        {
+                                            //
+                                        }
+                                    } );
+                                    
+                                    $.doTimeout( 'heartbeat', o.heartbeat, function ( )
+                                    {
+                                        cncnet.heartbeat ( s_key, hb_since,
+                                        {
+                                            success: function ( ret, id, method ) 
+                                            {
+                                                if ( ret.success )
+                                                {
+                                                    hb_since = ret.info.time;
+                                            
+                                                    $.each ( ret.events, function ( i, val )
+                                                    {
+                                                        if ( val.id <= last_event | val.type == 'noevent' )
+                                                            return false;
+                                                            
+                                                        last_event = val.id;
+                                                        
+                                                        switch ( val.type )
+                                                        {
+                                                            case 'noevent':
+                                                                return false;
+                                                            case 'msg':
+                                                                process_message ( val );                   
+                                                                break;
+                                                            case 'ready':
+                                                                break;
+                                                            case 'launch':
+                                                                break;
+                                                            case 'join':
+                                                                process_join ( val );
+                                                                break;
+                                                            case 'exit':
+                                                                process_exit ( val );
+                                                                break;
+                                                            case 'room':
+                                                                add_room_to_list ( val.param );
+                                                                break;
+                                                        }
+                                                    } );
+                                                }
+                                                else
+                                                {
+                                                    // error
+                                                }
+                                            },
+                                            error: function ( )
+                                            {
+                                                //
+                                            }
+                                        } );
+                                        return true;
+                                    } );
+                                }
+                            };
+                            
+                            $( '#cncnet_login_do' ).click ( function ( )
+                            {
+                                $( '#cncnet_login_fields' ).animate (
+                                {
+                                    'opacity': '0'
+                                } );
+                                $( '#cncnet_login > div' ).css ( 
+                                {
+                                    'background-image': 'url("img/big_blk_spinner.gif")',
+                                    'background-repeat': 'no-repeat',
+                                    'background-position': '50% 50%'
+                                } );
+                                if ( reg_mode )
+                                {
+                                    // TODO: Validation
+                                    cncnet.register 
+                                    ( 
+                                        $( '#cncnet_login_un' ).val ( ),
+                                        $( '#cncnet_login_pw' ).val ( ),
+                                        $( '#cncnet_login_em' ).val ( ),
+                                        {
+                                            success: function ( ret, id, method ) 
+                                            {
+                                                if ( ret.success )
+                                                {
+                                                    s_key = ret.s_key;
+                                                    login_complete ( );
+                                                }
+                                                else
+                                                {
+                                                    // TODO: error handle
+                                                }
+                                            },
+                                            error: function ( )
+                                            {
+                                                //
+                                            }
+                                        }
+                                    );
+                                }
+                                else
+                                {
+                                    cncnet.login 
+                                    ( 
+                                        $( '#cncnet_login_un' ).val ( ),
+                                        $( '#cncnet_login_pw' ).val ( ),
+                                        {
+                                            success: function ( ret, id, method ) 
+                                            {
+                                                if ( ret.success )
+                                                {
+                                                    s_key = ret.s_key;
+                                                    login_complete ( );
+                                                }
+                                                else
+                                                {
+                                                    // TODO: error handle
+                                                }
+                                            },
+                                            error: function ( )
+                                            {
+                                                //
+                                            }
+                                        }
+                                    );
+                                }
+                            } );
+                            
+                            $( '#cncnet_login_reg' ).click ( function ( )
+                            {
+                                var button_height = $( this ).height( ) + 2;
+                                if ( !reg_mode )
+                                {
+                                    reg_mode = true;
+                                    $( '#cncnet_login_reg' ).animate ( 
+                                    {
+                                        'height': '0'
+                                    }, function ( ) {
+                                        $( this ).html( "Cancel" ).animate ( 
+                                        {
+                                            'height': button_height
+                                        } );
+                                    } );
+                                    $( '#cncnet_login_do' ).animate ( 
+                                    {
+                                        'height': '0'
+                                    }, function ( ) 
+                                    {
+                                        $( this ).html( "Register" ).animate ( 
+                                        {
+                                            'height': button_height
+                                        } );
+                                    } );
+                                    $('#cncnet_login').animate ( 
+                                    {
+                                        'height': '22em', // TODO: Move vals to CSS
+                                        'margin-top': '-11em'
+                                    } );
+                                    
+                                    $('#cncnet_login_fields .hide').css ( 
+                                    {
+                                        'opacity': '0',
+                                        'display': 'block'
+                                    } ).animate( 
+                                    {
+                                        'opacity': '1'
+                                    } );
+                                    
+                                    $('#cncnet_login_em').focus ( );
+                                }
+                                else
+                                {
+                                    reg_mode = false;
+                                    $( '#cncnet_login_reg' ).animate ( 
+                                    {
+                                        'height': '0'
+                                    }, function ( ) 
+                                    {
+                                        $( this ).html( "Register" ).animate ( 
+                                        {
+                                            'height': button_height
+                                        } );
+                                    } );
+                                    $( '#cncnet_login_do' ).animate ( 
+                                    {
+                                        'height': '0'
+                                    }, function ( ) {
+                                        $( this ).html( "Login" ).animate ( 
+                                        {
+                                            'height': button_height
+                                        } );
+                                    } );
+                                    $('#cncnet_login').animate ( 
+                                    {
+                                        'height': '18em', // TODO: Move vals to CSS
+                                        'margin-top': '-9em'
+                                    } );
+                                    
+                                    $('#cncnet_login_fields .hide').animate ( 
+                                    {
+                                        'opacity': '0',
+                                        'display': 'block'
+                                    }, function ( )
+                                    {
+                                        $( this ).hide( );
+                                    } );
+                                }
+                                    
+                            } );
+                            // </login>
+                            
+                            // <main UI>
+                            obj.append ( 
+                                '<div id="cncnet_main" class="container_12">' + 
+                                '<header class="grid_12"><h1>CnCNet</h1><nav><ul>' +
+                                '<li><a id="cncnet_logout">Logout</a></li></ul></nav></header>' +
+                                '<div class="grid_8"><div id="cncnet_chat"><ol id="cncnet_chat_list"></ol>' +
+                                '<div class="cncnet_shutter">' +
+                                '<input id="cncnet_chat_box" type="text" placeholder="Type here to chat..." />' +
+                                '<button id="cncnet_chat_send" type="button">Send</button>' +
+                                '</div></div></div>' +
+                                '<div class="grid_4"><div id="cncnet_users"><ul id="cncnet_user_list"></ul>' +
+                                '</div><div id="cncnet_rooms"><ul id="cncnet_room_list"></ul>' +
+                                '<div class="cncnet_shutter"></div></div></div></div>'
+                            );
+                            
+                            $( '#cncnet_main' ).hide( ).height( $( window ).height ( ) );
+                            
+                            $( window ).resize ( function ( ) 
+                            {
+                                $( '#cncnet_main' ).height ( $( window ).height ( ) );
+                            } );
+                            
+                            $( '#cncnet_chat_send' ).click ( function ( )
+                            {          
+                                var old_bg = $( '#cncnet_chat_box' ).css ( 'background-image' );
+                                $( '#cncnet_chat_box' ).css ( 'background-image', 'url("img/spinner.gif") no-repeat 99%, ' + old_bg );
+                            
+                                cncnet.send ( s_key, $( '#cncnet_chat_box' ).val ( ), current_room,
+                                {
+                                    success: function ( ret, id, method ) 
+                                    {
+                                        if ( ret.success )
+                                        {
+                                            $( '#cncnet_chat_box' ).css ( 'background-image', old_bg );
+                                        }
+                                        else
+                                        {
+                                            // TODO: error handle
+                                        }
+                                    },
+                                    error: function ( )
+                                    {
+                                        //
+                                    }
+                                } );
+                                
+                                $( '#cncnet_chat_box' ).val ( "" );
+                            } );
+                            
+                            room_list = new Array ( );
+                            var add_room_to_list = function ( room )
+                            {
+                                room.buffer = new Array ( );
+                                room_list.push ( room );
+                                $( '#cncnet_room_list' ).append ( 
+                                    '<li ' + ( room.pass ? 'class="locked_room"' : '' ) + 
+                                    '><span class="room_game">[' + room.game + 
+                                    ']</span> <span class="room_name">' + room.name +
+                                    '</span>' + ( room.players != '-1' ? '<span class="room_players">[1/' + 
+                                    room.players + ']</span>' : '' ) + '</li>' );
+                            };
+                            
+                            var display_player_list = function ( room_id )
+                            {
+                                $( room_list ).each ( function ( id, val )
+                                {
+                                    if ( val.id == room_id )
+                                    {
+                                        for ( var a in val.users )
+                                        {
+                                            $( '#cncnet_user_list' ).append ( 
+                                                '<li id="user-' + a + '"><span class="user_name">' +
+                                                val.users[a] + '</span></li>' 
+                                            );  
+                                        } 
+                                        return false;
+                                    }
+                                    return true;
+                                } );
+                            };
+                            
+                            var process_message = function ( message_obj )
+                            {
+                                var room = {};
+                                $( room_list ).each ( function ( id, val )
+                                {
+                                    if ( val.id == message_obj.room )
+                                    {
+                                        room = val;
+                                        return false;
+                                    }
+                                    return true;
+                                } );
+                                
+                                if ( current_room == message_obj.room )
+                                {
+                                    $( '#cncnet_chat_list' ).append ( 
+                                        '<li><span class="chat_time">[' + message_obj.time.split(" ")[1] + 
+                                        ']</span> <span class="chat_username">' + room.users[message_obj.user] +
+                                        '</span>: <span class="chat_message">' + message_obj.param +
+                                        '</span></li>'
+                                    ).animate(
+                                    { 
+                                        scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                                    }, 500);
+                                }
+                            };
+                            
+                            var process_join = function ( join_obj )
+                            {
+                                var rid = 0
+                                var room = {};
+                                $( room_list ).each ( function ( id, val )
+                                {
+                                    if ( val.id == join_obj.room )
+                                    {
+                                        room = val;
+                                        rid = id;
+                                        return false;
+                                    }
+                                    return true;
+                                } );
+                                
+                                room.users[join_obj.user] = join_obj.param;
+                                room_list[rid] = room;
+                                
+                                
+                                if ( current_room == join_obj.room )
+                                {
+                                    $( '#cncnet_user_list' ).append ( 
+                                        '<li id="user-' + join_obj.user + '"><span class="user_name">' +
+                                        join_obj.param + '</span></li>' 
+                                    );  
+                                
+                                    $( '#cncnet_chat_list' ).append ( 
+                                        '<li class="system_message"><span class="chat_time">[' + join_obj.time.split(" ")[1] + 
+                                        ']</span> * <span class="chat_username">' + join_obj.param +
+                                        '</span> has just joined this room</li>'
+                                    ).animate(
+                                    { 
+                                        scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                                    }, 500);
+                                }
+                            };
+                            
+                            var process_exit = function ( exit_obj )
+                            {
+                                var rid = 0
+                                var room = {};
+                                $( room_list ).each ( function ( id, val )
+                                {
+                                    if ( val.id == exit_obj.room )
+                                    {
+                                        room = val;
+                                        rid = id;
+                                        return false;
+                                    }
+                                    return true;
+                                } );
+                                
+                                room.users.spice( exit_obj.user, 1 );
+                                room_list[rid] = room;
+                                
+                                
+                                if ( current_room == exit_obj.room )
+                                {
+                                    $( '#cncnet_chat_list' ).append ( 
+                                        '<li class="system_message"><span class="chat_time">[' + exit_obj.time.split(" ")[1] + 
+                                        ']</span> * <span class="chat_username">' + exit_obj.param +
+                                        '</span> has just joined this room</li>'
+                                    ).animate(
+                                    { 
+                                        scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                                    }, 500);
+                                    $( '#user-' + exit_obj.user ).remove( );
+                                }
+                            };
+                            // </main UI>
+                            
+                        } );
+                    }
+                } );
+            } ) ( jQuery );
+            
+            $( document ).ready( function ( )
+            {
+                $('#cncnet').cncNet ( );
+            } );
+        </script>
+    </head>
+    <body>
+        <div id="cncnet"></div>
+    </body>
+</html>

@@ -58,8 +58,9 @@ class CnCNet_Event extends CnCNet_Db_Table_Abstract
     {
         $q = $this->select( 
             CnCNet_Db_Table_Abstract::SELECT_WITH_FROM_PART, 
-            array( 'type', 'time', 'room', 'user', 'param' ) 
-        )->where( 'player_id = ?', $player_id )->where( 'time > ?', $since );
+            array( 'id', 'type', 'time', 'room', 'user', 'param' ) 
+        )->where( 'player_id = ? OR player_id = 0', $player_id )->where( 'time >= ?', $since );
+        
         
         $return = $this->fetchAll( $q );
         $actual_return = array ( );
@@ -71,6 +72,7 @@ class CnCNet_Event extends CnCNet_Db_Table_Abstract
                 
             $actual_return[] = array
             (
+                'id' => $ret['id'],
                 'type' => $ret['type'],
                 'time' => $ret['time'],
                 'room' => $ret['room'],
