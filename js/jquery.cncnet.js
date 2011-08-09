@@ -39,6 +39,13 @@
                 var hb_since = 0;
                 var current_room = 0;
                 var last_event = 0;
+                var init_error = "";
+                
+                if ( window.location.hash )
+                {
+                    if ( hash_string == "#error-session" )
+                        init_error = "Session Expired. Please log in again"
+                }
                 
                 // <login>
                 var reg_mode = false;
@@ -46,7 +53,7 @@
                 obj.append( '<div id="cncnet_login"><div class="container_12">' +
                     '<h1 class="grid_6 prefix_3 suffix_3">Login to CnCNet</h1>' +
                     '<div id="cncnet_login_fields">' +
-                    '<div class="grid_6 prefix_3 suffix_3"><div id="cncnet_login_error">Test error.</div></div>' +
+                    '<div class="grid_6 prefix_3 suffix_3"><div id="cncnet_login_error">' + init_error + '</div></div>' +
                     '<label class="grid_6 prefix_3 suffix_3"><span>Username:</span>' +
                     '<input id="cncnet_login_un" type="text" tabstop="1" /></label>' +
                     '<label class="grid_6 prefix_3 suffix_3"><span>Password:</span>' +
@@ -136,7 +143,20 @@
                                     }
                                     else
                                     {
-                                        // error
+                                        if ( typeof ret.errors != 'undefined' )
+                                            if ( ret.errors[0] == "Invalid Session" )
+                                            {
+                                                $.cookie ( 's_key', null );
+                                                var url = window.location;
+                                                if ( url.indexOf("?") != -1 )
+                                                    url = url.split("?")[0];
+
+                                                window.location = url + "#error-session";
+                                            }
+                                        else
+                                        { 
+                                            // Server error
+                                        }
                                     }
                                 },
                                 error: function ( )
@@ -221,15 +241,15 @@
                         return login_error ( "Please enter an email address" );
                         
                     var un_regex = /^([A-Za-z0-9]{3,12})$/;
-                    if ( reg_mode && un_regex.test ( un ) )
+                    if ( reg_mode && !un_regex.test ( un ) )
                         return login_error ( "Please pick username between 3 and 12 characters long with only letters and numbers" );
                         
                     var pw_regex = /^(.{6,64})$/;
-                    if ( reg_mode && un_regex.test ( pw ) )
+                    if ( reg_mode && !un_regex.test ( pw ) )
                         return login_error ( "Please enter a password at least 6 characters long" );
                         
                     var em_regex = /^([A-Za-z0-9_\+\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-                    if ( reg_mode && em_regex.test ( em ) )
+                    if ( reg_mode && !em_regex.test ( em ) )
                         return login_error ( "Please enter a valid email address" );
                     
                     login_loading_spinner ( true );
