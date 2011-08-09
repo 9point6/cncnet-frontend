@@ -63,6 +63,9 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
         $row = $this->select( )->where( $is_user_id ? 'id = ?' : 'nickname LIKE ?', $user )->fetchRow( );
         if ( $row )
         {
+            // TODO: perform better detection for the need for this.
+            $this->logout ( $row->id ); // To deal with connection loss, etc 
+            
             $pass_hash = hash ( $this->hashalgo, $password . $row->pass_salt );
             if ( strcmp ( $pass_hash, $row->pass_hash ) == 0 )
             {
@@ -184,7 +187,7 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
             $q = $this->select(
                 CnCNet_Db_Table_Abstract::SELECT_WITH_FROM_PART, 
                 array( 'id', 'active' )
-            )->where( 'active < ?', date ( 'Y-m-d H:i:s', time()-30 ) );
+            )->where( 'active < ?', date ( 'Y-m-d H:i:s', time() - 30 ) );
                 
             $uids = array ( );
             $users = $this->fetchAll( $q );

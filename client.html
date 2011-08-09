@@ -525,7 +525,7 @@
                                 }
                             }
                             
-                            $( '#cncnet_login_do' ).click ( function ( )
+                            var do_login = function ( )
                             {
                                 var un = $( '#cncnet_login_un' ).val ( );
                                 var pw = $( '#cncnet_login_pw' ).val ( );
@@ -607,7 +607,10 @@
                                         }
                                     } );
                                 }
-                            } );
+                            };
+                            
+                            $( '#cncnet_login_do' ).click ( function ( ) { do_login ( ); } );
+                            $( '#cncnet_login_un, #cncnet_login_pw, #cncnet_login_em' ).keypress ( function ( e ) { if ( e.keyCode == 13 ) do_login ( ); } );
                             
                             $( '#cncnet_login_reg' ).click ( function ( )
                             {
@@ -714,12 +717,16 @@
                                 $( '#cncnet_main' ).height ( $( window ).height ( ) );
                             } );
                             
-                            $( '#cncnet_chat_send' ).click ( function ( )
-                            {          
-                                var old_bg = $( '#cncnet_chat_box' ).css ( 'background-image' );
-                                $( '#cncnet_chat_box' ).css ( 'background-image', 'url("img/spinner.gif") no-repeat 99%, ' + old_bg );
+                            var send_message = function ( )
+                            {
+                                var msg = $( '#cncnet_chat_box' ).val ( );
+                                
+                                if ( msg == "" )
+                                    return;
+                                //var old_bg = $( '#cncnet_chat_box' ).css ( 'background-image' );
+                                //$( '#cncnet_chat_box' ).css ( 'background-image', 'url("img/spinner.gif") no-repeat 99%, ' + old_bg );
                             
-                                cncnet.send ( s_key, $( '#cncnet_chat_box' ).val ( ), current_room,
+                                cncnet.send ( s_key, msg, current_room,
                                 {
                                     success: function ( ret, id, method ) 
                                     {
@@ -734,12 +741,16 @@
                                     },
                                     error: function ( )
                                     {
-                                        //
+                                        // TODO: error handle
                                     }
                                 } );
                                 
                                 $( '#cncnet_chat_box' ).val ( "" );
-                            } );
+                            };
+                            
+                            $( '#cncnet_chat_send' ).click ( function ( ) { send_message ( ); } );
+                            
+                            $( '#cncnet_chat_box' ).keypress ( function ( e ) { if ( e.keyCode == 13 ) send_message ( ); } );
                             
                             room_list = new Array ( );
                             var add_room_to_list = function ( room )
