@@ -15,7 +15,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
-
+ 
 define('APP_ROOT', dirname(__FILE__));
 
 set_include_path(get_include_path() . PATH_SEPARATOR . 'include/' . PATH_SEPARATOR . 'include/models/');

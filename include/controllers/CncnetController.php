@@ -22,7 +22,7 @@ class CncnetController extends CnCNet_Controller_Action
     {
         require_once( 'Zend/Json/Server.php' );
         
-        date_default_timezone_set ( "Europe/London" );
+        //date_default_timezone_set ( "Europe/London" );
         
         $this->_server = new Zend_Json_Server( );
         $this->_helper->viewRenderer->setNoRender( );

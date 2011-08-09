@@ -60,7 +60,7 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
     
     public function login ( $user, $password, $ip, $is_user_id = false, $port = 8054 )
     {
-        $row = $this->select( )->where( $is_user_id ? 'id = ?' : 'nickname = ?', $user )->fetchRow( );
+        $row = $this->select( )->where( $is_user_id ? 'id = ?' : 'nickname LIKE ?', $user )->fetchRow( );
         if ( $row )
         {
             $pass_hash = hash ( $this->hashalgo, $password . $row->pass_salt );

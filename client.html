@@ -8,7 +8,6 @@
         <link type="text/css" rel="stylesheet" href="css/reset.css" />
         <link type="text/css" rel="stylesheet" href="css/text.css" />
         <link type="text/css" rel="stylesheet" href="css/960.css" />
-        <link type="text/css" rel="stylesheet" href="css/qvivo_scroll.css" />
         <style type="text/css">
             body {
                 background: #999;
@@ -137,6 +136,33 @@
                 .login_button button:hover, .login_button button:focus {
                     color: #f30;
                     text-shadow: 0 0 12px #f30;
+                }
+                
+                #cncnet_login_error {
+                    margin-bottom: .5em;
+                    border: 2px #633 solid;
+                    font-size: 1.5em;
+                    color: #fff;
+                    padding: 4px;
+                    text-align: center;
+                    display: none;
+                    
+                    -moz-border-radius: 6px; 
+                    -webkit-border-radius: 6px; 
+                    border-radius: 6px; 
+
+                    -moz-background-clip: padding; 
+                    -webkit-background-clip: padding-box; 
+                    background-clip: padding-box; 
+                    
+                    background-color: #333;
+                    background-image: -webkit-gradient(linear, left top, left bottom, from(#633), to(#966)); 
+                    background-image: -webkit-linear-gradient(top, #633, #966); 
+                    background-image: -moz-linear-gradient(top, #633, #966); 
+                    background-image: -ms-linear-gradient(top, #633, #966); 
+                    background-image: -o-linear-gradient(top, #633, #966); 
+                    background-image: linear-gradient(top, #633, #966);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#663333', EndColorStr='#996666'); 
                 }
                 
             #cncnet_main header {
@@ -303,7 +329,7 @@
             }
         </style>
         
-        <script type="text/javascript" src="js/jquery-1.5.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-1.6.2.min.js"></script>
         <script type="text/javascript" src="js/json2.js"></script>
         <script type="text/javascript" src="js/jquery.ba-dotimeout.min.js"></script>
         <script type="text/javascript" src="js/jquery.zend.jsonrpc.js"></script>
@@ -342,6 +368,7 @@
                             obj.append( '<div id="cncnet_login"><div class="container_12">' +
                                 '<h1 class="grid_6 prefix_3 suffix_3">Login to CnCNet</h1>' +
                                 '<div id="cncnet_login_fields">' +
+                                '<div class="grid_6 prefix_3 suffix_3"><div id="cncnet_login_error">Test error.</div></div>' +
                                 '<label class="grid_6 prefix_3 suffix_3"><span>Username:</span>' +
                                 '<input id="cncnet_login_un" type="text" tabstop="1" /></label>' +
                                 '<label class="grid_6 prefix_3 suffix_3"><span>Password:</span>' +
@@ -442,71 +469,143 @@
                                 }
                             };
                             
-                            $( '#cncnet_login_do' ).click ( function ( )
+                            var login_error_visible = false;
+                            var login_error = function ( text )
                             {
-                                $( '#cncnet_login_fields' ).animate (
+                                var err = $( '#cncnet_login_error' );
+                                if ( !login_error_visible )
                                 {
-                                    'opacity': '0'
-                                } );
-                                $( '#cncnet_login > div' ).css ( 
+                                    login_error_visible = true;
+                                    var h = err.height( );
+                                    err.css ( 
+                                    {
+                                        'display': 'block',
+                                        'height': '0',
+                                        'opacity': '0'
+                                    } ).animate (
+                                    {
+                                        'height': h,
+                                        'opacity': '1'
+                                    } );
+                                    $('#cncnet_login').animate ( 
+                                    {
+                                        'height': '+=4em',
+                                        'margin-top': '-=2em'
+                                    } );
+                                }
+                                
+                                err.text ( text );
+                            };
+                            
+                            var login_loading_spinner = function ( show )
+                            {
+                                if ( show )
                                 {
-                                    'background-image': 'url("img/big_blk_spinner.gif")',
-                                    'background-repeat': 'no-repeat',
-                                    'background-position': '50% 50%'
-                                } );
-                                if ( reg_mode )
-                                {
-                                    // TODO: Validation
-                                    cncnet.register 
-                                    ( 
-                                        $( '#cncnet_login_un' ).val ( ),
-                                        $( '#cncnet_login_pw' ).val ( ),
-                                        $( '#cncnet_login_em' ).val ( ),
-                                        {
-                                            success: function ( ret, id, method ) 
-                                            {
-                                                if ( ret.success )
-                                                {
-                                                    s_key = ret.s_key;
-                                                    login_complete ( );
-                                                }
-                                                else
-                                                {
-                                                    // TODO: error handle
-                                                }
-                                            },
-                                            error: function ( )
-                                            {
-                                                //
-                                            }
-                                        }
-                                    );
+                                    $( '#cncnet_login_fields' ).animate (
+                                    {
+                                        'opacity': '0'
+                                    } );
+                                    $( '#cncnet_login > div' ).css ( 
+                                    {
+                                        'background-image': 'url("img/big_blk_spinner.gif")',
+                                        'background-repeat': 'no-repeat',
+                                        'background-position': '50% 50%'
+                                    } );
                                 }
                                 else
                                 {
-                                    cncnet.login 
-                                    ( 
-                                        $( '#cncnet_login_un' ).val ( ),
-                                        $( '#cncnet_login_pw' ).val ( ),
+                                    $( '#cncnet_login_fields' ).animate (
+                                    {
+                                        'opacity': '1'
+                                    } );
+                                    $( '#cncnet_login > div' ).css ( 
+                                    {
+                                        'background-image': 'none',
+                                    } );
+                                }
+                            }
+                            
+                            $( '#cncnet_login_do' ).click ( function ( )
+                            {
+                                var un = $( '#cncnet_login_un' ).val ( );
+                                var pw = $( '#cncnet_login_pw' ).val ( );
+                                var em = $( '#cncnet_login_em' ).val ( );
+                                
+                                if ( un == "" )
+                                    return login_error ( "Please enter a username" );
+                                    
+                                if ( pw == "" )
+                                    return login_error ( "Please enter a password" );
+                                    
+                                if ( reg_mode && em == "" )
+                                    return login_error ( "Please enter an email address" );
+                                    
+                                var un_regex = /^([A-Za-z0-9]{3,12})$/;
+                                if ( reg_mode && un_regex.test ( un ) )
+                                    return login_error ( "Please pick username between 3 and 12 characters long with only letters and numbers" );
+                                    
+                                var pw_regex = /^(.{6,64})$/;
+                                if ( reg_mode && un_regex.test ( pw ) )
+                                    return login_error ( "Please enter a password at least 6 characters long" );
+                                    
+                                var em_regex = /^([A-Za-z0-9_\+\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+                                if ( reg_mode && em_regex.test ( em ) )
+                                    return login_error ( "Please enter a valid email address" );
+                                
+                                login_loading_spinner ( true );
+                                if ( reg_mode )
+                                {
+                                    cncnet.register ( un, pw, em,
+                                    {
+                                        success: function ( ret, id, method ) 
                                         {
-                                            success: function ( ret, id, method ) 
+                                            if ( ret.success )
                                             {
-                                                if ( ret.success )
-                                                {
-                                                    s_key = ret.s_key;
-                                                    login_complete ( );
-                                                }
-                                                else
-                                                {
-                                                    // TODO: error handle
-                                                }
-                                            },
-                                            error: function ( )
-                                            {
-                                                //
+                                                s_key = ret.s_key;
+                                                login_complete ( );
                                             }
+                                            else
+                                            {
+                                                login_loading_spinner ( false );
+                                                if ( typeof ret.errors != 'undefined' )
+                                                    login_error ( ret.errors[0] );
+                                                else
+                                                    login_error ( "Server Error: Please try again in a moment" );
+                                            }
+                                        },
+                                        error: function ( )
+                                        {
+                                            login_loading_spinner ( false );
+                                            login_error ( "Server Error: Please try again in a moment" );
                                         }
-                                    );
+                                    } );
+                                }
+                                else
+                                {
+                                    cncnet.login ( un, pw,
+                                    {
+                                        success: function ( ret, id, method ) 
+                                        {
+                                            if ( ret.success )
+                                            {
+                                                s_key = ret.s_key;
+                                                login_complete ( );
+                                            }
+                                            else
+                                            {
+                                                login_loading_spinner ( false );
+                                                if ( typeof ret.errors != 'undefined' )
+                                                    login_error ( ret.errors[0] );
+                                                else
+                                                    login_error ( "Server Error: Please try again in a moment" );
+                                            }
+                                        },
+                                        error: function ( )
+                                        {
+                                            login_loading_spinner ( false );
+                                            login_error ( "Server Error: Please try again in a moment" );
+                                        }
+                                    } );
                                 }
                             } );
                             
@@ -537,8 +636,8 @@
                                     } );
                                     $('#cncnet_login').animate ( 
                                     {
-                                        'height': '22em', // TODO: Move vals to CSS
-                                        'margin-top': '-11em'
+                                        'height': '+=4em',
+                                        'margin-top': '-=2em'
                                     } );
                                     
                                     $('#cncnet_login_fields .hide').css ( 
@@ -576,8 +675,8 @@
                                     } );
                                     $('#cncnet_login').animate ( 
                                     {
-                                        'height': '18em', // TODO: Move vals to CSS
-                                        'margin-top': '-9em'
+                                        'height': '-=4em',
+                                        'margin-top': '+=2em'
                                     } );
                                     
                                     $('#cncnet_login_fields .hide').animate ( 
