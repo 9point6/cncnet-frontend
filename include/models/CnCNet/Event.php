@@ -86,4 +86,13 @@ class CnCNet_Event extends CnCNet_Db_Table_Abstract
         
         return $actual_return;
     }
+    
+    public function cleanup ( $uid, $last_event )
+    {
+        
+        $where[] = $this->getAdapter()->quoteInto('player_id = ?', $uid );
+        $where[] = $this->getAdapter()->quoteInto('id <= ?', $last_event );
+        
+        $this->delete ( $where );
+    }
 }

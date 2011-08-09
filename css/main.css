@@ -1,0 +1,370 @@
+/*
+ * Copyright (c) 2011 John Sanderson <js@9point6.com>
+ *
+ * Permission to use, copy, modify, and distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+body {
+    background: #999 url("../img/big_gry_spinner.gif") no-repeat 50% 50%;
+    overflow:hidden;
+}
+
+body, button {
+    font-family: 'TradeGothic LT CondEighteen', sans-serif;
+}
+
+::-moz-selection, input::-moz-selection {
+    background: #f30;
+    color: #000;
+} 
+
+::selection, input::selection {
+    background: #f30;
+    color: #000;
+}
+
+.posbottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+#cncnet_login {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -9em;
+    height: 18em;
+    width: 100%;
+    border-top: 12px #333 solid;
+    border-bottom: 12px #333 solid;
+    background: #000;
+    z-index: 1000;
+    color: #999;
+    
+    -moz-box-shadow: 0px 0px 40px #000; 
+    -webkit-box-shadow: 0px 0px 40px #000; 
+    box-shadow: 0px 0px 40px #000; 
+}
+
+    #cncnet_login h1 {
+        font-size: 3.5em;
+        font-weight: normal;
+        text-align: center;
+        margin-bottom: .25em
+    }
+    
+    #cncnet_login label {
+        font-size: 2em;
+    }
+    
+    #cncnet_login label input {
+        float: right;
+        width: 350px;
+        margin-bottom: .5em;
+        border: 2px #333 solid;
+        font-size: 1em;
+        color: #fff;
+        padding: 2px;
+        
+        -moz-border-radius: 6px; 
+        -webkit-border-radius: 6px; 
+        border-radius: 6px; 
+
+        -moz-background-clip: padding; 
+        -webkit-background-clip: padding-box; 
+        background-clip: padding-box; 
+        
+        background-color: #333;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(#666)); 
+        background-image: -webkit-linear-gradient(top, #333, #666); 
+        background-image: -moz-linear-gradient(top, #333, #666); 
+        background-image: -ms-linear-gradient(top, #333, #666); 
+        background-image: -o-linear-gradient(top, #333, #666); 
+        background-image: linear-gradient(top, #333, #666);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#666666'); 
+    }
+    
+    #cncnet_login label input:focus {
+        border: 2px #c30 solid;
+    }
+    
+    *:focus {
+        outline: none;
+    }
+    
+    .login_button button {
+        text-align: center;
+        font-size: 2em;
+        width: 100%; 
+        display: block;
+        color: #000;
+        border: none;
+        margin: 0;
+        cursor: pointer;
+        
+        text-shadow: 0 0 12px #000;
+        text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+        
+        -moz-border-radius: 6px 6px 0 0; 
+        -webkit-border-radius: 6px 6px 0 0; 
+        border-radius: 6px 6px 0 0; 
+
+        -moz-background-clip: padding; 
+        -webkit-background-clip: padding-box; 
+        background-clip: padding-box; 
+        
+        background-color: #999;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#333)); 
+        background-image: -webkit-linear-gradient(top, #999, #333); 
+        background-image: -moz-linear-gradient(top, #999, #333); 
+        background-image: -ms-linear-gradient(top, #999, #333); 
+        background-image: -o-linear-gradient(top, #999, #333); 
+        background-image: linear-gradient(top, 9999, #333);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
+    }
+    
+    .login_button button:hover, .login_button button:focus {
+        color: #f30;
+        text-shadow: 0 0 12px #f30;
+    }
+    
+    #cncnet_login_error {
+        margin-bottom: .5em;
+        border: 2px #633 solid;
+        font-size: 1.5em;
+        color: #fff;
+        padding: 4px;
+        text-align: center;
+        display: none;
+        
+        -moz-border-radius: 6px; 
+        -webkit-border-radius: 6px; 
+        border-radius: 6px; 
+
+        -moz-background-clip: padding; 
+        -webkit-background-clip: padding-box; 
+        background-clip: padding-box; 
+        
+        background-color: #333;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#633), to(#966)); 
+        background-image: -webkit-linear-gradient(top, #633, #966); 
+        background-image: -moz-linear-gradient(top, #633, #966); 
+        background-image: -ms-linear-gradient(top, #633, #966); 
+        background-image: -o-linear-gradient(top, #633, #966); 
+        background-image: linear-gradient(top, #633, #966);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#663333', EndColorStr='#996666'); 
+    }
+    
+#cncnet_main header {
+    height: 7%;
+    margin-top: 10px;
+}
+
+    #cncnet_main header nav ul {
+        list-style: none;
+    }
+
+    #cncnet_main header nav li {
+        margin: 0;
+        float: right;
+        padding: 5px 20px;
+        border: 1px solid #333;
+        outline: 1px solid #ccc;
+        font-weight: bold;
+        
+        background-color: #333;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#999)); 
+        background-image: -webkit-linear-gradient(top, #ccc, #999); 
+        background-image: -moz-linear-gradient(top, #ccc, #999); 
+        background-image: -ms-linear-gradient(top, #ccc, #999); 
+        background-image: -o-linear-gradient(top, #ccc, #999); 
+        background-image: linear-gradient(top, #ccc, #999);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#999999'); 
+    }
+
+    #cncnet_main header nav li a {
+        color: #fff;
+        cursor: pointer;
+        
+        text-shadow: 0 0 8px #000;
+    }
+
+    #cncnet_main header nav li a:hover {
+        color: #f60;
+        
+        text-shadow: 0 0 8px #f60;
+    }
+        
+#cncnet_main > div {
+    height: 80%;
+}
+
+#cncnet_chat, #cncnet_rooms, #cncnet_users {
+    position: relative;
+    width: 100%;
+    padding-bottom: 4em;
+    border: 2px #333 solid;
+    font-size: 1em;
+    color: #fff;
+    
+    -moz-border-radius: 10px; 
+    -webkit-border-radius: 10px; 
+    border-radius: 10px; 
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
+    
+    background-color: #333;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#333), to(#000)); 
+    background-image: -webkit-linear-gradient(top, #333, #000); 
+    background-image: -moz-linear-gradient(top, #333, #000); 
+    background-image: -ms-linear-gradient(top, #333, #000); 
+    background-image: -o-linear-gradient(top, #333, #000); 
+    background-image: linear-gradient(top, #333, #000);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#000000'); 
+}
+
+#cncnet_chat {
+    height: 100%;
+}
+
+#cncnet_rooms {
+    margin-top: 1%;
+    height: 49%;
+}
+
+#cncnet_users {
+    height: 50%;
+    padding: 0;
+}
+
+.cncnet_shutter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3.5em;
+    font-size: 1em;
+    color: #000;
+    
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px; 
+    border-radius: 8px; 
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
+    
+    background-color: #e16119;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e16119), to(#a41506)); 
+    background-image: -webkit-linear-gradient(top, #e16119, #a41506); 
+    background-image: -moz-linear-gradient(top, #e16119, #a41506); 
+    background-image: -ms-linear-gradient(top, #e16119, #a41506); 
+    background-image: -o-linear-gradient(top, #e16119, #a41506); 
+    background-image: linear-gradient(top, #e16119, #a41506);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e16119', EndColorStr='#a41506'); 
+}
+
+#cncnet_chat_list, #cncnet_room_list, #cncnet_user_list {
+    font-family: consolas, mono;
+    list-style: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    font-size: 1.2em
+}
+
+#cncnet_chat_list li, #cncnet_room_list li, #cncnet_user_list li {
+    margin-left: 5px;
+}
+
+#cncnet_chat_box {
+    float: left;
+    width: 84%;
+    height: 1.5em;
+    font-size: 2em;
+    color: #000;
+    padding: 0;
+    margin: 0.125em 0 0 0.125em;
+    border: none;
+    
+    -moz-border-radius: 8px 0 0 8px; 
+    -webkit-border-radius: 8px 0 0 8px; 
+    border-radius: 8px 0 0 8px; 
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
+    
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); 
+    background-image: -webkit-linear-gradient(top, #ccc, #fff); 
+    background-image: -moz-linear-gradient(top, #ccc, #fff); 
+    background-image: -ms-linear-gradient(top, #ccc, #fff); 
+    background-image: -o-linear-gradient(top, #ccc, #fff); 
+    background-image: linear-gradient(top, #ccc, #fff);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#fff'); 
+}
+
+#cncnet_chat_send {
+    float: right;
+    width: 14%;
+    height: 1.5em;
+    font-size: 2em;
+    color: #000;
+    text-align: center;
+    display: block;
+    border: none;
+    margin: 0.125em 0.125em 0 0;
+    cursor: pointer;
+    
+    text-shadow: 0 0 12px #000;
+    text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+    
+    -moz-border-radius: 0 8px 8px 0; 
+    -webkit-border-radius: 0 8px 8px 0; 
+    border-radius: 0 8px 8px 0; 
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
+        
+    background-color: #999;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#999), to(#333)); 
+    background-image: -webkit-linear-gradient(top, #999, #333); 
+    background-image: -moz-linear-gradient(top, #999, #333); 
+    background-image: -ms-linear-gradient(top, #999, #333); 
+    background-image: -o-linear-gradient(top, #999, #333); 
+    background-image: linear-gradient(top, 9999, #333);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
+}
+
+.chat_time {
+    font-size: 0.8em;
+    color: #ccc;
+}
+
+.system_message {
+    color: #f60;
+    font-weight: bold;
+}
+
+.locked_room {
+    background: url("img/lock.png") no-repeat 100% 50%;
+}

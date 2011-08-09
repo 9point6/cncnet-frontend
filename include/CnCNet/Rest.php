@@ -139,7 +139,7 @@ class CnCNet_Rest
      * @param int $since unix timestamp of last heartbeat
      * @return string[] Everything that's happened since last heartbeat
      */
-    public function heartbeat ( $s_key, $since ) 
+    public function heartbeat ( $s_key, $since, $last_event = 0 ) 
     {
         if ( !$this->validate_session ( $s_key ) )
             return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
@@ -147,6 +147,9 @@ class CnCNet_Rest
         $event = new CnCNet_Event( );
         $player = new CnCNet_Player( );
         $p_id = $player->get_id( $s_key );
+        
+        //if ( $last_event != 0 )
+        //    $event->cleanup ( $uid, $last_event );
         
         return array
         (
