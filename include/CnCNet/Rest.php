@@ -148,8 +148,8 @@ class CnCNet_Rest
         $player = new CnCNet_Player( );
         $p_id = $player->get_id( $s_key );
         
-        if ( $last_event != 0 )
-            $event->cleanup ( $p_id, $last_event );
+        //if ( $last_event != 0 )
+        //    $event->cleanup ( $p_id, $last_event );
         
         return array
         (

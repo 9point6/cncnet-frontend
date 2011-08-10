@@ -322,24 +322,22 @@ body, button {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#fff'); 
 }
 
-#cncnet_chat_send {
-    float: right;
-    width: 14%;
+.cncnet_button {
     height: 1.5em;
     font-size: 2em;
     color: #000;
     text-align: center;
     display: block;
     border: none;
-    margin: 0.125em 0.125em 0 0;
     cursor: pointer;
+    margin: 0.125em 0.125em 0.125em 0.125em;
     
     text-shadow: 0 0 12px #000;
     text-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
     
-    -moz-border-radius: 0 8px 8px 0; 
-    -webkit-border-radius: 0 8px 8px 0; 
-    border-radius: 0 8px 8px 0; 
+    -moz-border-radius: 8px; 
+    -webkit-border-radius: 8px; 
+    border-radius: 8px; 
 
     -moz-background-clip: padding; 
     -webkit-background-clip: padding-box; 
@@ -353,6 +351,22 @@ body, button {
     background-image: -o-linear-gradient(top, #999, #333); 
     background-image: linear-gradient(top, 9999, #333);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
+}
+
+.cncnet_button:hover {
+    color: #f60;
+    
+    text-shadow: 0 0 12px #f60;
+    text-shadow: 0 0 12px rgba(255, 51, 0, 0.4);
+}
+
+#cncnet_chat_send {
+    float: right;
+    width: 14%;
+    
+    -moz-border-radius: 0 8px 8px 0; 
+    -webkit-border-radius: 0 8px 8px 0; 
+    border-radius: 0 8px 8px 0; 
 }
 
 .chat_time {

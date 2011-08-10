@@ -25,7 +25,7 @@
             var defaults = 
             {
                 serverUrl: 'cncnet',
-                heartbeat: 1000
+                heartbeat: 250
             };
             
             var options = $.extend ( defaults, options );
@@ -39,13 +39,7 @@
                 var hb_since = 0;
                 var current_room = 0;
                 var last_event = 0;
-                var init_error = "";
-                
-                if ( window.location.hash )
-                {
-                    if ( hash_string == "#error-session" )
-                        init_error = "Session Expired. Please log in again"
-                }
+                var username = "Player";
                 
                 // <login>
                 var reg_mode = false;
@@ -53,7 +47,7 @@
                 obj.append( '<div id="cncnet_login"><div class="container_12">' +
                     '<h1 class="grid_6 prefix_3 suffix_3">Login to CnCNet</h1>' +
                     '<div id="cncnet_login_fields">' +
-                    '<div class="grid_6 prefix_3 suffix_3"><div id="cncnet_login_error">' + init_error + '</div></div>' +
+                    '<div class="grid_6 prefix_3 suffix_3"><div id="cncnet_login_error"></div></div>' +
                     '<label class="grid_6 prefix_3 suffix_3"><span>Username:</span>' +
                     '<input id="cncnet_login_un" type="text" tabstop="1" /></label>' +
                     '<label class="grid_6 prefix_3 suffix_3"><span>Password:</span>' +
@@ -73,8 +67,6 @@
                 {
                     if ( s_key != false )
                     {
-                        $.cookie('s_key', s_key, { expires: 7 } );
-                        
                         $('#cncnet_login').animate ( 
                         {
                             'opacity': '0'
@@ -83,6 +75,8 @@
                             $( this ).hide( );
                         } );
                         $( '#cncnet_main' ).fadeIn ( );
+                        
+                        $( '#cncnet_chat_box' ).focus ( );
                         
                         rooms = cncnet.lst (
                         {
@@ -103,70 +97,91 @@
                         
                         $.doTimeout( 'heartbeat', o.heartbeat, function ( )
                         {
-                            cncnet.heartbeat ( s_key, hb_since, last_event,
-                            {
-                                success: function ( ret, id, method ) 
-                                {
-                                    if ( ret.success )
-                                    {
-                                        hb_since = ret.info.time;
-                                
-                                        $.each ( ret.events, function ( i, val )
-                                        {
-                                            if ( val.id <= last_event | val.type == 'noevent' )
-                                                return false;
-                                                
-                                            last_event = val.id;
-                                            
-                                            switch ( val.type )
-                                            {
-                                                case 'noevent':
-                                                    return false;
-                                                case 'msg':
-                                                    process_message ( val );                   
-                                                    break;
-                                                case 'ready':
-                                                    break;
-                                                case 'launch':
-                                                    break;
-                                                case 'join':
-                                                    process_join ( val );
-                                                    break;
-                                                case 'exit':
-                                                    process_exit ( val );
-                                                    break;
-                                                case 'room':
-                                                    add_room_to_list ( val.param );
-                                                    break;
-                                            }
-                                        } );
-                                    }
-                                    else
-                                    {
-                                        if ( typeof ret.errors != 'undefined' )
-                                            if ( ret.errors[0] == "Invalid Session" )
-                                            {
-                                                $.cookie ( 's_key', null );
-                                                var url = window.location;
-                                                if ( url.indexOf("?") != -1 )
-                                                    url = url.split("?")[0];
-
-                                                window.location = url + "#error-session";
-                                            }
-                                        else
-                                        { 
-                                            // Server error
-                                        }
-                                    }
-                                },
-                                error: function ( )
-                                {
-                                    //
-                                }
-                            } );
-                            return true;
+                            do_heartbeat ( );
                         } );
                     }
+                };
+                
+                var invalid_session_count = 0;
+                var do_heartbeat = function ( )
+                {
+                    cncnet.heartbeat ( s_key, hb_since, last_event,
+                    {
+                        success: function ( ret, id, method ) 
+                        {
+                            if ( ret.success )
+                            {
+                                invalid_session_count = 0;
+                                hb_since = ret.info.time;
+                        
+                                $.each ( ret.events, function ( i, val )
+                                {
+                                    val_id = parseInt( val.id );
+                                    if ( val_id <= last_event | val.type == 'noevent' )
+                                        return false;
+                                        
+                                    last_event = val_id;
+                                    
+                                    switch ( val.type )
+                                    {
+                                        case 'msg':
+                                            process_message ( val );                   
+                                            break;
+                                        case 'ready':
+                                            break;
+                                        case 'launch':
+                                            break;
+                                        case 'join':
+                                            process_join ( val );
+                                            break;
+                                        case 'exit':
+                                            process_exit ( val );
+                                            break;
+                                        case 'room':
+                                            add_room_to_list ( val.param );
+                                            break;
+                                    }
+                                } );
+                            }
+                            else
+                            {
+                                if ( typeof ret.errors != 'undefined' )
+                                    if ( ret.errors[0] == "Invalid Session" )
+                                    {
+                                        if ( invalid_session_count == 3 )
+                                        {
+                                            $.cookie ( 's_key', null );
+                                            $.cookie ( 'username', null );
+                                            var url = window.location.href;
+                                            if ( url.indexOf("?") != -1 )
+                                                url = url.split("?")[0];
+
+                                            window.location = url + "?error=session";
+                                        }
+                                        else
+                                            invalid_session_count++;
+                                    }
+                                else
+                                { 
+                                    // Server error
+                                }
+                            }
+                            
+                            $.doTimeout( 'heartbeat', o.heartbeat, function ( )
+                            {
+                                do_heartbeat ( );
+                            } );
+                        },
+                        error: function ( )
+                        {
+                            //
+                            
+                            $.doTimeout( 'heartbeat', o.heartbeat, function ( )
+                            {
+                                do_heartbeat ( );
+                            } );
+                        }
+                    } );
                 };
                 
                 var login_error_visible = false;
@@ -176,7 +191,8 @@
                     if ( !login_error_visible )
                     {
                         login_error_visible = true;
-                        var h = err.height( );
+                        var h = '1.5em'; // TODO: make this not hardcoded
+                        console.log(h);
                         err.css ( 
                         {
                             'display': 'block',
@@ -196,6 +212,19 @@
                     
                     err.text ( text );
                 };
+                
+                if ( window.location.search )
+                {
+                    switch ( window.location.search )
+                    {
+                        case "?error=session":
+                            login_error ( "Session Expired. Please log in again" );
+                            break;
+                        case "?logout=1":
+                            login_error ( "Logout successful!" );
+                            break;
+                    }
+                }
                 
                 var login_loading_spinner = function ( show )
                 {
@@ -262,6 +291,9 @@
                                 if ( ret.success )
                                 {
                                     s_key = ret.s_key;
+                                    username = un;
+                                    $.cookie ( 's_key', s_key, { expires: 7 } );
+                                    $.cookie ( 'username', un, { expires: 7 } );
                                     login_complete ( );
                                 }
                                 else
@@ -405,17 +437,72 @@
                     '<div class="grid_8"><div id="cncnet_chat"><ol id="cncnet_chat_list"></ol>' +
                     '<div class="cncnet_shutter">' +
                     '<input id="cncnet_chat_box" type="text" placeholder="Type here to chat..." />' +
-                    '<button id="cncnet_chat_send" type="button">Send</button>' +
+                    '<button id="cncnet_chat_send" class="cncnet_button" type="button">Send</button>' +
                     '</div></div></div>' +
                     '<div class="grid_4"><div id="cncnet_users"><ul id="cncnet_user_list"></ul>' +
                     '</div><div id="cncnet_rooms"><ul id="cncnet_room_list"></ul>' +
-                    '<div class="cncnet_shutter"></div></div></div></div>'
+                    '<div class="cncnet_shutter"><button id="cncnet_room_create" class="cncnet_button" ' +
+                    'type="button">New</button></div></div></div></div>'
                 );
                 $( '#cncnet_main' ).hide( ).height( $( window ).height ( ) );
                 
                 $( window ).resize ( function ( ) 
                 {
                     $( '#cncnet_main' ).height ( $( window ).height ( ) );
+                } );
+                
+                $( '#cncnet_room_create' ).click ( function ( ) 
+                {
+                    var par = $( this ).parent( );
+                    
+                    $( '.cncnet_button:not(.active_button)', par ).fadeOut ( );
+                    par.animate (
+                    {
+                        'height': '+=10em'
+                    }, function ( )
+                    {
+                        par.append ( 
+                            '<div id="cncnet_new_room"><h2>New Room</h2>' +
+                            '<label><input type="text" id="cncnet_game_name" value="' +
+                            username + '\'s Game" /></label><label><input type="checkbox" ' +
+                            'id="cncnet_game_late" /><span>Allow Late Joins</span></label>' +
+                            '<label><input type="checkbox" id="cncnet_game_private" />' +
+                            '<span>Private Game</span></label><label><input type="password" ' +
+                            'placeholder="Password" id="cncnet_game_password" /></label>' +
+                            '<button id="cncnet_game_do" type="button" class="cncnet_button">' +
+                            'Create Room</button><button id="cncnet_game_dont" type="button" ' +
+                            'class="cncnet_button">Cancel</button></div>'
+                        );
+                        $( 'cncnet_new_room' ).hide ( ).fadeIn ( );
+                    } );
+                } );
+                
+                $( '#cncnet_logout' ).click ( function ( ) 
+                {
+                    cncnet.logout ( s_key,
+                    {
+                        success: function ( ret, id, method ) 
+                        {
+                            if ( ret.success )
+                            {
+                                $.cookie ( 's_key', null );
+                                $.cookie ( 'username', null );
+                                var url = window.location.href;
+                                if ( url.indexOf("?") != -1 )
+                                    url = url.split("?")[0];
+
+                                window.location = url + "?logout=1";
+                            }
+                            else
+                            {
+                                // TODO: error handle
+                            }
+                        },
+                        error: function ( )
+                        {
+                            // TODO: error handle
+                        }
+                    } );
                 } );
                 
                 var send_message = function ( )
@@ -454,6 +541,7 @@
                 $( '#cncnet_chat_box' ).keypress ( function ( e ) { if ( e.keyCode == 13 ) send_message ( ); } );
                 
                 room_list = new Array ( );
+                
                 var add_room_to_list = function ( room )
                 {
                     room.buffer = new Array ( );
@@ -487,27 +575,32 @@
                 
                 var process_message = function ( message_obj )
                 {
-                    var room = {};
-                    $( room_list ).each ( function ( id, val )
+                    var is_sys = message_obj.user == 0
+                    if ( !is_sys )
                     {
-                        if ( val.id == message_obj.room )
+                        var room = {};
+                        $( room_list ).each ( function ( id, val )
                         {
-                            room = val;
-                            return false;
-                        }
-                        return true;
-                    } );
+                            if ( val.id == message_obj.room )
+                            {
+                                room = val;
+                                return false;
+                            }
+                            return true;
+                        } );
+                    }
                     
                     if ( current_room == message_obj.room )
                     {
                         $( '#cncnet_chat_list' ).append ( 
-                            '<li><span class="chat_time">[' + message_obj.time.split(" ")[1] + 
-                            ']</span> <span class="chat_username">' + room.users[message_obj.user] +
-                            '</span>: <span class="chat_message">' + message_obj.param +
-                            '</span></li>'
+                            '<li' + ( is_sys ? ' class="system_message"' : '' ) + 
+                            '><span class="chat_time">[' + message_obj.time.split(" ")[1] + 
+                            ']</span> ' + ( is_sys ? '*' : ( '<span class="chat_username">' + 
+                            room.users[message_obj.user] + '</span>:' ) ) + 
+                            ' <span class="chat_message">' + message_obj.param + '</span></li>'
                         ).animate(
                         { 
-                            scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                            'scrollTop': $( '#cncnet_chat_list' ).prop( 'scrollHeight' ) 
                         }, 500);
                     }
                 };
@@ -544,7 +637,7 @@
                             '</span> has just joined this room</li>'
                         ).animate(
                         { 
-                            scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                            scrollTop: $( '#cncnet_chat_list' ).prop ( 'scrollHeight' ) 
                         }, 500);
                     }
                 };
@@ -576,19 +669,18 @@
                             '</span> has just joined this room</li>'
                         ).animate(
                         { 
-                            scrollTop: $( '#cncnet_chat_list' ).attr( 'scrollHeight' ) 
+                            scrollTop: $( '#cncnet_chat_list' ).prop ( 'scrollHeight' ) 
                         }, 500);
                         $( '#user-' + exit_obj.user ).remove( );
                     }
                 };
                 // </main UI>
                 
-                
-                
                 s_key = $.cookie( 's_key' );
                 s_key = s_key == null ? false : s_key;
+                username = $.cookie( 'username' );
+                username = s_key == null ? "Player" : username;
                 login_complete ( );
-                
             } );
         }
     } );
