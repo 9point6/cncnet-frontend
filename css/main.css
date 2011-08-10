@@ -294,6 +294,17 @@ body, button {
     margin-left: 5px;
 }
 
+#cncnet_chat_list li a, #cncnet_room_list li a, #cncnet_user_list li a {
+    color: #ccc;
+    font-weight: bold;
+}
+
+#cncnet_chat_list li a:hover, #cncnet_room_list li a:hover, #cncnet_user_list li a:hover {
+    color: #f60;
+    font-weight: bold;
+    text-decoration: none;
+}
+
 #cncnet_chat_box {
     float: left;
     width: 84%;

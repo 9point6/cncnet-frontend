@@ -590,6 +590,11 @@
                         } );
                     }
                     
+                    url_reg = /(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/gi;
+
+                    if( url_reg.test ( message_obj.param ) )
+                        message_obj.param = message_obj.param.replace ( url_reg, '<a href="$&" rel="nofollow">$&</a>' );
+                    
                     if ( current_room == message_obj.room )
                     {
                         $( '#cncnet_chat_list' ).append ( 
