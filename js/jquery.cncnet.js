@@ -41,6 +41,9 @@
                 var last_event = 0;
                 var username = "Player";
                 
+                if ( $.browser.webkit ) 
+                    $( 'html' ).addClass ( "wk" );
+                
                 // <login>
                 var reg_mode = false;
                 
@@ -192,7 +195,6 @@
                     {
                         login_error_visible = true;
                         var h = '1.5em'; // TODO: make this not hardcoded
-                        console.log(h);
                         err.css ( 
                         {
                             'display': 'block',
@@ -462,13 +464,18 @@
                     $( '.cncnet_button', par ).fadeOut ( );
                     par.animate (
                     {
-                        'height': '+=9.5em'
+                        'height': '+=13em'
                     }, function ( )
                     {
+                        // TODO: Dynamic game list
                         par.append ( 
                             '<div id="cncnet_new_room"><h2>New Room</h2>' +
                             '<label><input type="text" id="cncnet_game_name" value="' +
-                            username + '\'s Game" /></label><label><input type="checkbox" ' +
+                            username + '\'s Game" /></label><label><select id="cncnet_game_type">' +
+                            '<option value="no" id="cncnet_game_type_default" selected="selected">' +
+                            'Please select a game</option><option value="cnc95">C&C95</option>' +
+                            '<option value="ra">Red Alert</option>' +
+                            '</select></label><label><input type="checkbox" ' +
                             'id="cncnet_game_late" /><span>Allow Late Joins</span></label>' +
                             '<label><input type="checkbox" id="cncnet_game_private" />' +
                             '<span>Private Game</span></label><label><input type="password" ' +
@@ -519,19 +526,63 @@
                         $( '#cncnet_game_do' ).click ( function ( )
                         {
                             var gn = $( '#cncnet_game_name' ).val ( );
+                            var gt = $( '#cncnet_game_type' ).val ( );
                             var lj = $( '#cncnet_game_late' ).prop ( "checked" );
                             var pr = $( '#cncnet_game_private' ).prop ( "checked" );
                             var pw = $( '#cncnet_game_password' ).val ( );
                             
+                            var valid = true;
+                            
                             if ( gn == "" )
-                            {}    // Error: Need game name
+                            {
+                                $( '#cncnet_game_name' ).prop ( "placeholder", "We need a name!").css ( 
+                                {
+                                    'opacity': '0.25'
+                                } ).animate ( 
+                                {
+                                    'opacity': '1'
+                                }, 1000 );
+                                valid = false;
+                            }   // Error: Need game name
+                            
+                            if ( gt == "no" )
+                            {
+                                $( '#cncnet_game_type' ).css ( 
+                                {
+                                    'opacity': '0.25'
+                                } ).animate ( 
+                                {
+                                    'opacity': '1'
+                                }, 1000 );
+                                valid = false;
+                            }   // Error: Need game name
                             
                             if ( pr && pw == "" )
-                            {}    // Error: Need pw
+                            {
+                                $( '#cncnet_game_password' ).prop ( "placeholder", "We need a password!").css ( 
+                                {
+                                    'opacity': '0.25'
+                                } ).animate ( 
+                                {
+                                    'opacity': '1'
+                                }, 1000 );
+                                valid = false;
+                            }    // Error: Need pw
                                 
                             // TODO: Add more validation here
+                            // TODO: Add a better error notification (IE can't see placeholders)
                             
-                            
+                            cncnet.create ( s_key, gn, gt, lj, -1, pw, 
+                            {
+                                success: function ( ret, id, method )
+                                {
+                                    //
+                                },
+                                error: function ( )
+                                {
+                                    //
+                                }
+                            } );
                         } );
                         
                         $( '#cncnet_game_dont' ).click ( function ( )

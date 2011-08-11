@@ -388,7 +388,7 @@ body, button {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
 }
 
-.cncnet_button:hover {
+.cncnet_button:hover, .cncnet_button:focus {
     color: #f60;
     
     text-shadow: 0 0 12px #f60;
@@ -459,13 +459,14 @@ body, button {
             border-radius: 0 8px 8px 0; 
         }
 
-    #cncnet_new_room label input[type='text'], #cncnet_new_room label input[type='password']  {
+    #cncnet_new_room label input[type='text'], #cncnet_new_room label input[type='password'], #cncnet_new_room label select  {
         width: 100%;
         height: 1.5em;
         font-size: 2em;
         color: #000;
         padding: 0;
         border: none;
+        text-overflow: ellipsis;
         
         -moz-border-radius: 8px; 
         -webkit-border-radius: 8px; 
@@ -478,12 +479,30 @@ body, button {
         background-color: #fff;
         background-image: -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); 
         background-image: -webkit-linear-gradient(top, #ccc, #fff); 
-        background-image: -moz-linear-gradient(top, #ccc, #fff); 
         background-image: -ms-linear-gradient(top, #ccc, #fff); 
         background-image: -o-linear-gradient(top, #ccc, #fff); 
+        background-image: -moz-linear-gradient(top, #ccc, #fff); 
         background-image: linear-gradient(top, #ccc, #fff);
     }
+    
+    .wk #cncnet_new_room label select {
+        padding-right: 18px;
+        background-repeat: no-repeat;
+        background-position: center right;
         
-    .filter #cncnet_new_room label input[type='text'], .filter  #cncnet_new_room label input[type='password']  {
+        -webkit-appearance: button;
+        
+        background-image: url("../img/select.png"), -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); 
+        background-image: url("../img/select.png"), -webkit-linear-gradient(top, #ccc, #fff); 
+        background-image: url("../img/select.png"), linear-gradient(top, #ccc, #fff);
+    }
+    
+    .wkm #cncnet_new_room label select:hover {
+        background-image: url("../img/select_h.png"), -webkit-gradient(linear, left top, left bottom, from(#ccc), to(#fff)); 
+        background-image: url("../img/select_h.png"), -webkit-linear-gradient(top, #ccc, #fff); 
+        background-image: url("../img/select_h.png"), linear-gradient(top, #ccc, #fff);
+    }
+        
+    .filter #cncnet_new_room label input[type='text'], .filter  #cncnet_new_room label input[type='password'], .filter #cncnet_new_room label select  {
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#ffffff'); 
     }
