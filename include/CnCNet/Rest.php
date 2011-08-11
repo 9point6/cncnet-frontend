@@ -336,6 +336,9 @@ class CnCNet_Rest
     
         $r = new CnCNet_Room( );
         
+        // TODO: more efficient way of dealing with this
+        $r->cleanup ( );
+        
         return $r->lst ( $room );
     }
     

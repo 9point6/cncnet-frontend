@@ -125,4 +125,22 @@ class CnCNet_Room extends CnCNet_Db_Table_Abstract
         
         return $return;
     }
+    
+    public function cleanup ( )
+    {    
+        $zero = '0';
+        $rlist = array ( );
+        $rlist[] = $zero;
+        $rlist[] = $zero;
+        
+        $subQ = $this->getAdapter( )->select( )->from( 'room_players' );
+        $rooms = $this->getAdapter( )->fetchAll( $subQ );
+        foreach ( $rooms as $r )
+        {
+            $rlist[] = $r.room_id;
+        }
+        $where = $this->getAdapter( )->quoteInto('id NOT IN (?)', $rlist );
+            
+        $this->getAdapter( )->delete( 'rooms', $where );
+    }
 }

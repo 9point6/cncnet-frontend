@@ -170,6 +170,7 @@ class CnCNet_Player extends CnCNet_Db_Table_Abstract
             'sesh_time' => null
         ), $this->getAdapter( )->quoteInto( 'id = ?', $id ) );
         
+        // TODO: use room->leave
         $this->getAdapter( )->delete( 'room_players',
             $this->getAdapter( )->quoteInto( 'player_id = ?', $id ) );
         

@@ -473,8 +473,8 @@
                             '<label><input type="text" id="cncnet_game_name" value="' +
                             username + '\'s Game" /></label><label><select id="cncnet_game_type">' +
                             '<option value="no" id="cncnet_game_type_default" selected="selected">' +
-                            'Please select a game</option><option value="cnc95">C&C95</option>' +
-                            '<option value="ra">Red Alert</option>' +
+                            'Please select a game</option><option value="1">C&C95</option>' +
+                            '<option value="2">Red Alert</option>' +
                             '</select></label><label><input type="checkbox" ' +
                             'id="cncnet_game_late" /><span>Allow Late Joins</span></label>' +
                             '<label><input type="checkbox" id="cncnet_game_private" />' +
@@ -522,6 +522,20 @@
                                 } );
                             }
                         } );
+                        
+                        var hide_new_game = function ( )
+                        {
+                            $( '#cncnet_new_room' ).fadeOut ( function ( )
+                            {
+                                par.animate ( {
+                                    'height': par_height
+                                }, function ( )
+                                {
+                                    $( '#cncnet_new_room' ).remove ( );
+                                    $( '.cncnet_button', par ).fadeIn ( );
+                                } );
+                            } );
+                        };
                         
                         $( '#cncnet_game_do' ).click ( function ( )
                         {
@@ -576,7 +590,9 @@
                             {
                                 success: function ( ret, id, method )
                                 {
+                                    console.log ( ret );
                                     //
+                                    hide_new_game ( );
                                 },
                                 error: function ( )
                                 {
@@ -585,19 +601,7 @@
                             } );
                         } );
                         
-                        $( '#cncnet_game_dont' ).click ( function ( )
-                        {
-                            $( '#cncnet_new_room' ).fadeOut ( function ( )
-                            {
-                                par.animate ( {
-                                    'height': par_height
-                                }, function ( )
-                                {
-                                    $( '#cncnet_new_room' ).remove ( );
-                                    $( '.cncnet_button', par ).fadeIn ( );
-                                } );
-                            } );
-                        } );
+                        $( '#cncnet_game_dont' ).click ( function ( ) { hide_new_game ( ); } );
                     } );
                 } );
                 
@@ -674,7 +678,7 @@
                         '<li ' + ( room.pass ? 'class="locked_room"' : '' ) + 
                         '><span class="room_game">[' + room.game + 
                         ']</span> <span class="room_name">' + room.name +
-                        '</span>' + ( room.players != '-1' ? '<span class="room_players">[1/' + 
+                        '</span> ' + ( room.players != '-1' ? '<span class="room_players">[1/' + 
                         room.players + ']</span>' : '' ) + '</li>' );
                 };
                 
