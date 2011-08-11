@@ -305,11 +305,12 @@ body, button {
     overflow-x: hidden;
     overflow-y: auto;
     height: 100%;
-    font-size: 1.2em
+    font-size: 1.2em;
+    padding-top: 0.5em;
 }
 
 #cncnet_chat_list li, #cncnet_room_list li, #cncnet_user_list li {
-    margin-left: 5px;
+    margin: 0 5px;
 }
 
 #cncnet_chat_list li a, #cncnet_room_list li a, #cncnet_user_list li a {
@@ -321,6 +322,34 @@ body, button {
     color: #f60;
     font-weight: bold;
     text-decoration: none;
+}
+
+#cncnet_room_list li {
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px; 
+    border-radius: 4px; 
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
+}
+
+#cncnet_room_list li:hover {
+    background-color: #666;
+    background-color: rgba(255,255,255,0.4);
+    color: #f60;
+}
+
+#cncnet_room_list li.selected {
+    background-color: #666;
+    background-color: rgba(255,51,0,0.4);
+    color: #fff;
+}
+
+#cncnet_room_list li.selected:hover {
+    background-color: #666;
+    background-color: rgba(255,51,0,0.4);
+    color: #fff;
 }
 
 #cncnet_chat_box {
@@ -419,7 +448,7 @@ body, button {
 }
 
 .locked_room {
-    background: url("img/lock.png") no-repeat 100% 50%;
+    background: url("../img/lock.png") no-repeat 100% 50%;
 }
 
 #cncnet_new_room h2 {

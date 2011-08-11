@@ -169,7 +169,7 @@
                                     // Server error
                                 }
                             }
-                            
+                            console.log ( ret.info.time );
                             $.doTimeout( 'heartbeat', o.heartbeat, function ( )
                             {
                                 do_heartbeat ( );
@@ -456,6 +456,44 @@
                     $( '#cncnet_main' ).height ( $( window ).height ( ) );
                 } );
                 
+                var join_room = function ( id )
+                {
+                    // TODO: Test for password
+                    
+                    if ( id != current_room )
+                    {                
+                        cncnet.leave ( s_key, current_room,
+                        {
+                            success: function ( ret, _id, method )
+                            {
+                                $( '#cncnet_room_list .selected' ).removeClass ( 'selected' );
+                                _join_room ( id )
+                            },
+                            error: function ( )
+                            {
+                                // TODO: Handle Error
+                            }
+                        } );
+                    }
+                };
+                
+                var _join_room = function ( id )
+                {
+                    cncnet.join ( s_key, id, '',
+                    {
+                        success: function ( ret, _id, method )
+                        {
+                            $( 'room' + ret.id ).addClass ( 'selected' );
+                            current_room = ret.id;
+                            $( '#cncnet_chat_list li' ).remove( );
+                        },
+                        error: function ( )
+                        {
+                            // TODO: Handle Error
+                        }
+                    } );
+                }
+                
                 $( '#cncnet_room_create' ).click ( function ( ) 
                 {
                     var par = $( this ).parent( );
@@ -586,19 +624,28 @@
                             // TODO: Add more validation here
                             // TODO: Add a better error notification (IE can't see placeholders)
                             
-                            cncnet.create ( s_key, gn, gt, lj, -1, pw, 
+                            if ( valid == true )
                             {
-                                success: function ( ret, id, method )
+                                cncnet.create ( s_key, gn, gt, lj, -1, pw, 
                                 {
-                                    console.log ( ret );
-                                    //
-                                    hide_new_game ( );
-                                },
-                                error: function ( )
-                                {
-                                    //
-                                }
-                            } );
+                                    success: function ( ret, id, method )
+                                    {
+                                        if ( ret.success )
+                                        {
+                                            hide_new_game ( );
+                                            join_room ( ret.room );
+                                        }
+                                        else
+                                        {
+                                            // TODO: error handle
+                                        }
+                                    },
+                                    error: function ( )
+                                    {
+                                        // TODO: error handle
+                                    }
+                                } );
+                            }
                         } );
                         
                         $( '#cncnet_game_dont' ).click ( function ( ) { hide_new_game ( ); } );
@@ -672,14 +719,25 @@
                 
                 var add_room_to_list = function ( room )
                 {
+                    active = current_room == room.id;
                     room.buffer = new Array ( );
                     room_list.push ( room );
+                    
                     $( '#cncnet_room_list' ).append ( 
-                        '<li ' + ( room.pass ? 'class="locked_room"' : '' ) + 
-                        '><span class="room_game">[' + room.game + 
+                        '<li id="room' + room.id + '"' + 
+                        ( room.pass ? 
+                            ( active ? ' class="locked_room selected"' 
+                                : ' class="locked_room"' ) : 
+                            ( active ? ' class="selected"' : '' ) 
+                        ) + '><span class="room_game">[' + room.game + 
                         ']</span> <span class="room_name">' + room.name +
                         '</span> ' + ( room.players != '-1' ? '<span class="room_players">[1/' + 
                         room.players + ']</span>' : '' ) + '</li>' );
+                        
+                    $( '#room' + room.id ).click ( function ( )
+                    {
+                        join_room ( room.id );
+                    } );
                 };
                 
                 var display_player_list = function ( room_id )

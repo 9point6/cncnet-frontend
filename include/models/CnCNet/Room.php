@@ -26,7 +26,8 @@ class CnCNet_Room extends CnCNet_Db_Table_Abstract
     {
         try 
         {
-            $pwhash = hash( $this->hashalgo, $game['pass'] );
+            $pwhash = strcmp ( $game['pass'], "" ) != 0 ?
+                hash( $this->hashalgo, $game['pass'] ) : "";
             
             $_game = array
             (
@@ -36,20 +37,19 @@ class CnCNet_Room extends CnCNet_Db_Table_Abstract
                 'max'       => $game['players'],
                 'created'   => date('Y-m-d H:i:s'),
                 'latestart' => $game['late'],
-                'password'  => $pwhash,
+                'password'  => $pwhash
             );
             
             $room_id = $this->insert( $_game );
-            
 
-            $this->join( $room_id, $player['id'], 
-                strcmp ( $game['pass'], "" ) == 0 ? "" : $pwhash );
+            /*$this->join( $room_id, $player['id'], 
+                strcmp ( $game['pass'], "" ) == 0 ? "" : $pwhash );*/
 
             return $room_id;
         }
         catch (Exception $e) 
         {
-            if ($room_id) 
+            if ( isset( $room_id ) )
             {
                 $this->delete($this->getAdapter()->quoteInto('id = ?', $room_id));
             }
@@ -60,8 +60,9 @@ class CnCNet_Room extends CnCNet_Db_Table_Abstract
     public function join ( $room_id, $player_id, $password = "" )
     {
         $r = $this->select( )->where( 'id = ?', $room_id )->fetchRow( );
-        if ( strcmp( $r['password'], hash( $this->hashalgo, $password ) ) == 0 
-            || strcmp ( $r['password'], "" ) == 0 )
+        
+        if ( strcmp ( $r['password'], "" ) == 0 || 
+            strcmp( $r['password'], hash( $this->hashalgo, $password ) ) == 0 )
         {
             $this->getAdapter( )->insert( 'room_players', array
             (
@@ -137,7 +138,7 @@ class CnCNet_Room extends CnCNet_Db_Table_Abstract
         $rooms = $this->getAdapter( )->fetchAll( $subQ );
         foreach ( $rooms as $r )
         {
-            $rlist[] = $r.room_id;
+            $rlist[] = $r['room_id'];
         }
         $where = $this->getAdapter( )->quoteInto('id NOT IN (?)', $rlist );
             
