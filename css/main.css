@@ -96,6 +96,9 @@ body, button {
         background-image: -ms-linear-gradient(top, #333, #666); 
         background-image: -o-linear-gradient(top, #333, #666); 
         background-image: linear-gradient(top, #333, #666);
+    }
+    
+    .filter #cncnet_login label input {
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#666666'); 
     }
     
@@ -135,6 +138,9 @@ body, button {
         background-image: -ms-linear-gradient(top, #999, #333); 
         background-image: -o-linear-gradient(top, #999, #333); 
         background-image: linear-gradient(top, 9999, #333);
+    }
+    
+    .filter .login_button button {
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
     }
     
@@ -167,6 +173,9 @@ body, button {
         background-image: -ms-linear-gradient(top, #633, #966); 
         background-image: -o-linear-gradient(top, #633, #966); 
         background-image: linear-gradient(top, #633, #966);
+    }
+    
+    .filter #cncnet_login_error {
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#663333', EndColorStr='#996666'); 
     }
     
@@ -194,6 +203,9 @@ body, button {
         background-image: -ms-linear-gradient(top, #ccc, #999); 
         background-image: -o-linear-gradient(top, #ccc, #999); 
         background-image: linear-gradient(top, #ccc, #999);
+    }
+    
+    .filter #cncnet_main header nav li {
         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#999999'); 
     }
 
@@ -237,6 +249,9 @@ body, button {
     background-image: -ms-linear-gradient(top, #333, #000); 
     background-image: -o-linear-gradient(top, #333, #000); 
     background-image: linear-gradient(top, #333, #000);
+}
+
+.filter #cncnet_chat, .filter  #cncnet_rooms, .filter  #cncnet_users {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#333333', EndColorStr='#000000'); 
 }
 
@@ -278,6 +293,9 @@ body, button {
     background-image: -ms-linear-gradient(top, #e16119, #a41506); 
     background-image: -o-linear-gradient(top, #e16119, #a41506); 
     background-image: linear-gradient(top, #e16119, #a41506);
+}
+
+.filter .cncnet_shutter {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#e16119', EndColorStr='#a41506'); 
 }
 
@@ -330,7 +348,10 @@ body, button {
     background-image: -ms-linear-gradient(top, #ccc, #fff); 
     background-image: -o-linear-gradient(top, #ccc, #fff); 
     background-image: linear-gradient(top, #ccc, #fff);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#fff'); 
+}
+
+.filter #cncnet_chat_box {
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#ffffff'); 
 }
 
 .cncnet_button {
@@ -361,6 +382,9 @@ body, button {
     background-image: -ms-linear-gradient(top, #999, #333); 
     background-image: -o-linear-gradient(top, #999, #333); 
     background-image: linear-gradient(top, 9999, #333);
+}
+
+.filter .cncnet_button {
     filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#999999', EndColorStr='#333333'); 
 }
 
@@ -374,6 +398,10 @@ body, button {
 #cncnet_chat_send {
     float: right;
     width: 14%;
+
+    -moz-background-clip: padding; 
+    -webkit-background-clip: padding-box; 
+    background-clip: padding-box; 
     
     -moz-border-radius: 0 8px 8px 0; 
     -webkit-border-radius: 0 8px 8px 0; 
@@ -404,12 +432,13 @@ body, button {
         margin: 0 5% 0.5em 5%;
     }
 
-    #cncnet_new_room button {
-        width: 44.5%;
-    }
-
         #cncnet_game_do {
+            width: 50%;
             margin-right: 0 !important;
+
+            -moz-background-clip: padding; 
+            -webkit-background-clip: padding-box; 
+            background-clip: padding-box; 
         
             -moz-border-radius: 8px 0 0 8px; 
             -webkit-border-radius: 8px 0 0 8px; 
@@ -417,8 +446,13 @@ body, button {
         }
         
         #cncnet_game_dont {
+            width: 39%;
             margin-left: 0 !important;
             float: right !important;
+
+            -moz-background-clip: padding; 
+            -webkit-background-clip: padding-box; 
+            background-clip: padding-box; 
         
             -moz-border-radius: 0 8px 8px 0; 
             -webkit-border-radius: 0 8px 8px 0; 
@@ -448,8 +482,8 @@ body, button {
         background-image: -ms-linear-gradient(top, #ccc, #fff); 
         background-image: -o-linear-gradient(top, #ccc, #fff); 
         background-image: linear-gradient(top, #ccc, #fff);
-        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#fff'); 
     }
-
-
-
+        
+    .filter #cncnet_new_room label input[type='text'], .filter  #cncnet_new_room label input[type='password']  {
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#cccccc', EndColorStr='#ffffff'); 
+    }

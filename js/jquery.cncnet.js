@@ -516,6 +516,24 @@
                             }
                         } );
                         
+                        $( '#cncnet_game_do' ).click ( function ( )
+                        {
+                            var gn = $( '#cncnet_game_name' ).val ( );
+                            var lj = $( '#cncnet_game_late' ).prop ( "checked" );
+                            var pr = $( '#cncnet_game_private' ).prop ( "checked" );
+                            var pw = $( '#cncnet_game_password' ).val ( );
+                            
+                            if ( gn == "" )
+                            {}    // Error: Need game name
+                            
+                            if ( pr && pw == "" )
+                            {}    // Error: Need pw
+                                
+                            // TODO: Add more validation here
+                            
+                            
+                        } );
+                        
                         $( '#cncnet_game_dont' ).click ( function ( )
                         {
                             $( '#cncnet_new_room' ).fadeOut ( function ( )
