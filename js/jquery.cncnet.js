@@ -321,6 +321,9 @@
                                 if ( ret.success )
                                 {
                                     s_key = ret.s_key;
+                                    username = un;
+                                    $.cookie ( 's_key', s_key, { expires: 7 } );
+                                    $.cookie ( 'username', un, { expires: 7 } );
                                     login_complete ( );
                                 }
                                 else
@@ -454,11 +457,12 @@
                 $( '#cncnet_room_create' ).click ( function ( ) 
                 {
                     var par = $( this ).parent( );
+                    par_height = $( par ).height ( );
                     
-                    $( '.cncnet_button:not(.active_button)', par ).fadeOut ( );
+                    $( '.cncnet_button', par ).fadeOut ( );
                     par.animate (
                     {
-                        'height': '+=10em'
+                        'height': '+=9.5em'
                     }, function ( )
                     {
                         par.append ( 
@@ -473,7 +477,58 @@
                             'Create Room</button><button id="cncnet_game_dont" type="button" ' +
                             'class="cncnet_button">Cancel</button></div>'
                         );
-                        $( 'cncnet_new_room' ).hide ( ).fadeIn ( );
+                        return_height = $( par ).height ( );
+                        $( '#cncnet_new_room' ).hide ( ).fadeIn ( );
+                        $( '#cncnet_game_password' ).hide ( );
+                        $( '#cncnet_game_private' ).click ( function ( )
+                        {
+                            if ( $( this ).prop ( 'checked' ) )
+                            {
+                                par.animate ( 
+                                {
+                                    'height': '+=3.5em'
+                                } );
+                                $( '#cncnet_game_password' ).css (
+                                {
+                                    'display': 'block',
+                                    'height': '0',
+                                    'opacity': '0'
+                                } ).animate (
+                                {
+                                    'height': $( '#cncnet_game_name' ).height ( ),
+                                    'opacity': '1'
+                                } );
+                            }
+                            else
+                            {
+                                par.animate ( 
+                                {
+                                    'height': return_height
+                                } );
+                                $( '#cncnet_game_password' ).animate (
+                                {
+                                    'height': '0',
+                                    'opacity': '0'
+                                }, function ( ) 
+                                {
+                                    $( this ).hide ( );
+                                } );
+                            }
+                        } );
+                        
+                        $( '#cncnet_game_dont' ).click ( function ( )
+                        {
+                            $( '#cncnet_new_room' ).fadeOut ( function ( )
+                            {
+                                par.animate ( {
+                                    'height': par_height
+                                }, function ( )
+                                {
+                                    $( '#cncnet_new_room' ).remove ( );
+                                    $( '.cncnet_button', par ).fadeIn ( );
+                                } );
+                            } );
+                        } );
                     } );
                 } );
                 
