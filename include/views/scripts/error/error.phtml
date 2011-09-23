@@ -1,4 +1,16 @@
 <?php
 
-header('Content-type: text/plain; charset=UTF-8');
-echo 'Error 404';
+//header('Content-type: text/plain; charset=UTF-8');
+//echo 'Error 404';
+
+header('Cache-Control: no-cache, must-revalidate');
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+header('Content-type: application/json; charset=UTF-8');
+
+$err = array
+(
+    'message' => $this->excepton->getMessage(),
+    'params' => $this->exception->getParams(),
+    'stackTrace' => $this->exception->getTrace()
+);
+echo json_encode($err);

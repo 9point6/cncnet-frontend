@@ -76,7 +76,7 @@ class CnCNet_Rest
         $this->join ( $s_key, 0 );
 
         if ( is_int ( $s_key ) && $s_key < 0 )
-            return array( 'success' => false, 'errors' => array( $this->error_code ( $s_key ) ) );
+            return array( 'success' => false, 'errors' => array( $this->error_code ( $s_key ), 1 ) );
         else
             return array( 'success' => true, 's_key' => $s_key );
     }
@@ -90,13 +90,13 @@ class CnCNet_Rest
     public function logout ( $s_key ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array( 'success' => false, 'errors' => array( $this->error_code ( -3 ) ) );
+            return array( 'success' => false, 'errors' => array( $this->error_code ( -3 ), 2 ) );
             
         $player = new CnCNet_Player( );
         $p_id = $player->get_id( $s_key );
         
         if ( $p_id < 0 )
-            return array( 'success' => false, 'errors' => array( $this->error_code ( $p_id ) ) );
+            return array( 'success' => false, 'errors' => array( $this->error_code ( $p_id ), 3 ) );
         
         return array ( 'success' => $player->logout( $p_id ) );
     }
@@ -112,18 +112,18 @@ class CnCNet_Rest
     public function change_pw ( $s_key, $new_pw, $old_pw ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 4 ) );
             
         $player = new CnCNet_Player( );
         $p_id = $player->get_id( $s_key );
         
         if ( $p_id < 0 )
-            return array( 'success' => false, 'errors' => array( $this->error_code ( $p_id ) ) );
+            return array( 'success' => false, 'errors' => array( $this->error_code ( $p_id ), 5 ) );
         
         $n_s_key = $player->change_pass ( $p_id, $old_pw, $new_pw, true );
             
         if ( is_int ( $n_s_key ) && $n_s_key < 0 )
-            return array( 'success' => false, 'errors' => array( $this->error_code ( $n_s_key ) ) );
+            return array( 'success' => false, 'errors' => array( $this->error_code ( $n_s_key ), 6 ) );
         else
             return array( 'success' => true, 'old_skey' => $s_key, 'new_skey' => $n_s_key );
     }
@@ -142,7 +142,7 @@ class CnCNet_Rest
     public function heartbeat ( $s_key, $since, $last_event = 0 ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 7 ) );
             
         $event = new CnCNet_Event( );
         $player = new CnCNet_Player( );
@@ -176,7 +176,7 @@ class CnCNet_Rest
     public function send ( $s_key, $message, $room = 0 ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 8 ) );
             
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );
@@ -209,7 +209,7 @@ class CnCNet_Rest
     public function join ( $s_key, $room, $password = "" ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 9 ) );
             
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );
@@ -220,6 +220,7 @@ class CnCNet_Rest
         
         if( $r->join( $room, $p_id, $password ) )
         {
+            $rooms[$room]['users'][$p_id] = $player->get_name( $s_key );
             $event->add(
                 'join',
                 $rooms[$room]['users'],
@@ -230,7 +231,7 @@ class CnCNet_Rest
         
             return array( 'success' => true );
         }
-        return array( 'success' => false, 'errors' => array ( $this->error_code ( -1 ) ) );
+        return array( 'success' => false, 'errors' => array ( $this->error_code ( -1 ), 10 ) );
     }
     
     /**
@@ -243,7 +244,7 @@ class CnCNet_Rest
     public function leave ( $s_key, $room ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 11 ) );
             
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );
@@ -282,7 +283,7 @@ class CnCNet_Rest
     public function create ( $s_key, $name, $game = -1, $late_start = false, $players = -1, $password = "" ) 
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 12 ) );
             
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );
@@ -356,7 +357,7 @@ class CnCNet_Rest
     public function ready ( $s_key, $room )
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 13 ) );
 
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );
@@ -386,7 +387,7 @@ class CnCNet_Rest
     public function launch ( $s_key, $room )
     {
         if ( !$this->validate_session ( $s_key ) )
-            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ) ) );
+            return array ( 'success' => false, 'errors' => array ( $this->error_code ( -3 ), 14 ) );
             
         $r = new CnCNet_Room( );
         $player = new CnCNet_Player( );

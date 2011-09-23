@@ -169,7 +169,6 @@
                                     // Server error
                                 }
                             }
-                            console.log ( ret.info.time );
                             $.doTimeout( 'heartbeat', o.heartbeat, function ( )
                             {
                                 do_heartbeat ( );
@@ -456,9 +455,24 @@
                     $( '#cncnet_main' ).height ( $( window ).height ( ) );
                 } );
                 
-                var join_room = function ( id )
+                var join_room = function ( id, pass )
                 {
-                    // TODO: Test for password
+                    // TODO: Test for password better, it's quite insecure atm
+                    if ( room_list[id] && room_list[id].pass && ( room_list[id].pass != '' ) )
+                    {
+                        if ( ( pass == "" ) || ( typeof pass === "undefined" ) )
+                        {
+                            pass = prompt ( "This is a private room. Please enter the password:" );
+                            
+                            if ( pass != room_list[id].pass )
+                                return;
+                        }
+                        else
+                        {
+                            if ( pass != room_list[id].pass )
+                                return;
+                        }
+                    }
                     
                     if ( id != current_room )
                     {                
@@ -467,7 +481,7 @@
                             success: function ( ret, _id, method )
                             {
                                 $( '#cncnet_room_list .selected' ).removeClass ( 'selected' );
-                                _join_room ( id )
+                                _join_room ( id, pass )
                             },
                             error: function ( )
                             {
@@ -477,15 +491,27 @@
                     }
                 };
                 
-                var _join_room = function ( id )
+                var _join_room = function ( id, pass )
                 {
-                    cncnet.join ( s_key, id, '',
+                    cncnet.join ( s_key, id, pass,
                     {
                         success: function ( ret, _id, method )
                         {
-                            $( 'room' + ret.id ).addClass ( 'selected' );
-                            current_room = ret.id;
-                            $( '#cncnet_chat_list li' ).remove( );
+                            if ( ret.success )
+                            {
+                                current_room = id;
+                                $( '#room' + current_room ).addClass ( 'selected' );
+                                $( '#cncnet_chat_list li' ).remove( );
+                                $( '#cncnet_user_list li' ).remove( );
+                                display_player_list ( current_room );
+                            }
+                            else
+                            {
+                                // TODO: Handle Error Better
+                                alert ( ret.errors[0] );
+                                
+                                _join_room ( 0 );
+                            }
                         },
                         error: function ( )
                         {
@@ -633,7 +659,7 @@
                                         if ( ret.success )
                                         {
                                             hide_new_game ( );
-                                            join_room ( ret.room );
+                                            join_room ( ret.room, pw );
                                         }
                                         else
                                         {
@@ -811,11 +837,12 @@
                         return true;
                     } );
                     
+                    var dontdoit = typeof room.users[join_obj.user] === "undefined";
+                    
                     room.users[join_obj.user] = join_obj.param;
                     room_list[rid] = room;
                     
-                    
-                    if ( current_room == join_obj.room )
+                    if ( ( current_room == join_obj.room ) && dontdoit )
                     {
                         $( '#cncnet_user_list' ).append ( 
                             '<li id="user-' + join_obj.user + '"><span class="user_name">' +
@@ -848,7 +875,7 @@
                         return true;
                     } );
                     
-                    room.users.spice( exit_obj.user, 1 );
+                    delete room.users[exit_obj.user];
                     room_list[rid] = room;
                     
                     
@@ -857,7 +884,7 @@
                         $( '#cncnet_chat_list' ).append ( 
                             '<li class="system_message"><span class="chat_time">[' + exit_obj.time.split(" ")[1] + 
                             ']</span> * <span class="chat_username">' + exit_obj.param +
-                            '</span> has just joined this room</li>'
+                            '</span> has just left this room</li>'
                         ).animate(
                         { 
                             scrollTop: $( '#cncnet_chat_list' ).prop ( 'scrollHeight' ) 
